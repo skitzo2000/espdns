@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS builder</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="vendor/esp-web-tools/install-button.js"></script>
+</head>
+<body>
+<main>
+  <h1>Builder</h1>
+  <p class="lead">Install espDNS on a new board over USB; installing erases the board.</p>
+  <div class="builder">
+    <div class="card boardlist" id="boards"><div class="empty">Loading boards…</div></div>
+    <div class="card detail" id="detail"><div class="empty">Choose a board.</div></div>
+  </div>
+  <p class="note" id="unsupported" hidden>This browser can't reach USB devices: use Chrome or Edge.</p>
+
+  <h2 class="dsec">Wi-Fi</h2>
+  <p class="lead">Join a board on USB to a network; the password goes to the board only.</p>
+  <div class="card wifi">
+    <div class="row"><button class="btn" id="connect">Connect to a board…</button>
+      <span id="board" class="sub"></span></div>
+    <form id="join" hidden>
+      <label>Network <select id="ssid"></select></label>
+      <label id="otherLabel" hidden>Network name <input id="other" autocomplete="off" spellcheck="false"></label>
+      <label>Password <input id="pass" type="password" autocomplete="new-password"></label>
+      <div class="row"><button class="btn primary" type="submit">Join</button>
+        <button class="btn quiet" type="button" id="rescan">Scan again</button>
+        <button class="btn quiet" type="button" id="done">Disconnect</button></div>
+    </form>
+    <div id="status" class="status"></div>
+    <details><summary>Board log</summary><pre id="log"></pre></details>
+  </div>
+</main>
+
+<template id="form-tpl">
+  <form class="boardform" autocomplete="off">
+    <h2>Describe a board</h2>
+    <div class="grid">
+      <label>Name <input name="name" placeholder="my-board" maxlength="23" required></label>
+      <label>Title <input name="title" placeholder="Maker Model"></label>
+      <label>Chip image <select name="image"></select></label>
+      <label>Flash <select name="flash_mb"><option>4</option><option selected>8</option><option>16</option><option>32</option></select></label>
+      <label>PSRAM MB <input name="psram_mb" type="number" min="0" max="32"></label>
+    </div>
+    <fieldset><legend>SPI buses</legend>
+      <div class="grid">
+        <label>Bus A <select name="spi0_host"><option value="">none</option><option>2</option><option>3</option></select></label>
+        <label>SCLK <input name="spi0_sclk" type="number" min="0" max="54"></label>
+        <label>MOSI <input name="spi0_mosi" type="number" min="0" max="54"></label>
+        <label>MISO <input name="spi0_miso" type="number" min="0" max="54"></label>
+        <label>Bus B <select name="spi1_host"><option value="">none</option><option>2</option><option>3</option></select></label>
+        <label>SCLK <input name="spi1_sclk" type="number" min="0" max="54"></label>
+        <label>MOSI <input name="spi1_mosi" type="number" min="0" max="54"></label>
+        <label>MISO <input name="spi1_miso" type="number" min="0" max="54"></label>
+      </div>
+    </fieldset>
+    <fieldset><legend>Ethernet</legend>
+      <div class="grid">
+        <label>Kind <select name="eth_kind"><option value="none">none (Wi-Fi)</option><option value="emac">built-in MAC + PHY</option><option value="w5500">W5500 over SPI</option></select></label>
+        <label data-for="emac">PHY <select name="eth_phy"><option>ip101</option><option>lan87xx</option><option>rtl8201</option><option>dp83848</option></select></label>
+        <label data-for="emac">PHY address <input name="eth_addr" type="number" min="-1" max="31" placeholder="1"></label>
+        <label data-for="emac">PHY reset <input name="eth_reset" type="number" min="0" max="54"></label>
+        <label data-for="emac">PHY power <input name="eth_power" type="number" min="0" max="54"></label>
+        <label data-for="emac">MDC <input name="eth_mdc" type="number" min="0" max="54" placeholder="chip default"></label>
+        <label data-for="emac">MDIO <input name="eth_mdio" type="number" min="0" max="54" placeholder="chip default"></label>
+        <label data-for="emac">RMII clock <select name="eth_clock"><option value="">chip default</option><option value="in">in from a GPIO</option><option value="out">out to a GPIO</option></select></label>
+        <label data-for="emac">Clock GPIO <input name="eth_clock_gpio" type="number" min="0" max="54"></label>
+        <label data-for="w5500">SPI bus <select name="eth_spi"><option>2</option><option>3</option></select></label>
+        <label data-for="w5500">CS <input name="eth_cs" type="number" min="0" max="54"></label>
+        <label data-for="w5500">INT <input name="eth_int" type="number" min="0" max="54"></label>
+        <label data-for="w5500">RST <input name="eth_rst" type="number" min="0" max="54"></label>
+        <label data-for="w5500">MHz <input name="eth_mhz" type="number" min="1" max="80" placeholder="20"></label>
+        <label data-for="emac w5500" class="check"><input name="eth_optional" type="checkbox"> An add-on that may not be fitted</label>
+      </div>
+    </fieldset>
+    <fieldset><legend>SD card</legend>
+      <div class="grid">
+        <label>Kind <select name="sd_kind"><option value="none">none</option><option value="sdmmc">SDMMC</option><option value="spi">over SPI</option></select></label>
+        <label data-for="sdmmc">Slot <input name="sd_slot" type="number" min="0" max="1" placeholder="0"></label>
+        <label data-for="sdmmc">Width <select name="sd_width"><option>4</option><option>1</option></select></label>
+        <label data-for="sdmmc">LDO channel <input name="sd_ldo" type="number" min="0" max="4" placeholder="none"></label>
+        <label data-for="spi">SPI bus <select name="sd_spi"><option>2</option><option>3</option></select></label>
+        <label data-for="spi">CS <input name="sd_cs" type="number" min="0" max="54"></label>
+      </div>
+    </fieldset>
+    <fieldset><legend>LED and Wi-Fi</legend>
+      <div class="grid">
+        <label>LED <select name="led_kind"><option value="none">none</option><option value="gpio">on a GPIO</option><option value="ws2812">WS2812 (RGB)</option></select></label>
+        <label data-for="gpio ws2812">LED pin <input name="led_pin" type="number" min="0" max="54"></label>
+        <label data-for="gpio" class="check"><input name="led_low" type="checkbox"> Active low</label>
+        <label>Wi-Fi transmit cap, dBm <input name="wifi_tx" type="number" min="2" max="20" placeholder="20 (chip default)"></label>
+      </div>
+    </fieldset>
+    <fieldset class="node-net"><legend>For this node</legend><div class="grid"></div></fieldset>
+    <div class="problems"></div>
+    <div class="row"><button class="btn primary" type="button" data-act="prepare">Prepare image</button>
+      <button class="btn quiet" type="button" data-act="save">Save to my boards</button></div>
+    <div class="install"></div>
+  </form>
+</template>
+
+<script type="module" src="builder.js"></script>
+</body>
+</html>

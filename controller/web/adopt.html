@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS adopt</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Adopt a node</h1>
+  <p class="lead">Give a node that isn't adopted its config and a static address; a dry run comes first.</p>
+  <div id="banner"></div>
+
+  <div class="pushgrid" id="form" hidden>
+    <section class="card pushsec wide2">
+      <h2>1. The node</h2>
+      <p class="sub">Not adopted: it runs on its board's settings. Identify flickers its LED.</p>
+      <div class="scroll"><table class="pnodes">
+        <thead><tr><th></th><th>Node</th><th class="wide">Board · chip image</th><th>Firmware</th><th>Address now</th><th>State</th><th></th></tr></thead>
+        <tbody id="nodes"></tbody>
+      </table></div>
+      <div id="unlisted"></div>
+    </section>
+
+    <section class="card pushsec">
+      <h2>2. Config and address</h2>
+      <div class="opts">
+        <label>Config <select id="config"></select></label>
+      </div>
+      <fieldset class="addrset">
+        <legend>Address</legend>
+        <label class="radio"><input type="radio" name="addr" value="auto" checked> <span id="auto-text">The config's, else the one it runs on</span></label>
+        <label class="radio"><input type="radio" name="addr" value="static"> Another static address</label>
+        <div class="opts" id="static-opts" hidden>
+          <label>Address/prefix <input id="address" placeholder="192.0.2.60/24" spellcheck="false" autocomplete="off" inputmode="decimal"></label>
+          <label>Gateway <input id="gateway" placeholder="192.0.2.1" spellcheck="false" autocomplete="off" inputmode="decimal"></label>
+        </div>
+        <label class="radio" id="dhcp-row"><input type="radio" name="addr" value="dhcp"> DHCP <span class="sub" id="dhcp-note"></span></label>
+        <label class="radio" id="reserved-row" hidden><input type="checkbox" id="reserved"> The node's address is reserved for its MAC in that network's DHCP server</label>
+      </fieldset>
+      <div id="preview" class="cfgresult"></div>
+    </section>
+
+    <section class="card pushsec">
+      <h2>3. The zone primary</h2>
+      <div id="primary"></div>
+    </section>
+
+    <section class="card pushsec wide2">
+      <h2>4. Dry run, then adopt</h2>
+      <p class="sub" id="what"></p>
+      <label class="radio" id="done-row" hidden><input type="checkbox" id="primary-done"> I've made the changes on the zone primary that the dry run names, by hand</label>
+      <div class="acts pushacts">
+        <button class="btn" id="dry" disabled>Dry run</button>
+        <button class="btn primary" id="go" disabled>Adopt</button>
+        <span class="sub" id="gonote"></span>
+      </div>
+    </section>
+  </div>
+
+  <section class="card job pushrun" id="run" hidden>
+    <div class="row">
+      <h2 id="run-title"></h2>
+      <span id="run-state" class="pill"></span>
+    </div>
+    <div class="sub" id="run-sub"></div>
+    <ol class="steps" id="run-steps"></ol>
+    <div id="run-primary"></div>
+    <div id="run-outcome"></div>
+    <details id="run-logwrap" open><summary>Log</summary><pre id="log"></pre></details>
+  </section>
+
+</main>
+<script type="module" src="adopt.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# ESP32-C3: single core, no PSRAM. Wi-Fi or a W5500; small cache, blocking from SD only.
+CONFIG_IDF_TARGET="esp32c3"

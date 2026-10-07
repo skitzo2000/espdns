@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS backup</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Backup</h1>
+  <p class="lead">The data directory in one encrypted file; a restore is the CLI's.</p>
+  <div id="banner"></div>
+
+  <section class="card bk">
+    <h2>Download a backup</h2>
+    <form id="form" autocomplete="off">
+      <label>Passphrase <span class="sub" id="minlen"></span>
+        <input type="password" id="pass" autocomplete="new-password" spellcheck="false"></label>
+      <label>Again
+        <input type="password" id="pass2" autocomplete="new-password" spellcheck="false"></label>
+      <details id="keywrap">
+        <summary>Encrypt to an age key instead</summary>
+        <label>age public key <input id="recipient" placeholder="age1..." spellcheck="false" autocomplete="off"></label>
+        <p class="sub">Restore it with the key's identity file: <code>espdns restore -identity key.txt</code>.</p>
+      </details>
+      <label class="check"><input type="checkbox" id="firmware"> Include <code>firmware/</code> <span class="sub" id="fwsize"></span></label>
+      <div class="row">
+        <button class="btn primary" id="go" type="submit">Download backup</button>
+        <span class="sub" id="status" role="status"></span>
+      </div>
+      <p class="sub">A backup holds the release key and the Wi-Fi passwords, so your login password
+        is asked again before each download.</p>
+      <p class="sub">The passphrase goes to the controller in this request only, over localhost, to
+        encrypt the file: it isn't kept or logged. Keep it apart from the backup (in a password manager). The fleet
+        lock is taken while the files are read, so a backup isn't made while a job or the CLI changes the
+        fleet; then it says who holds it.</p>
+    </form>
+  </section>
+
+  <section class="card bk">
+    <h2>What a backup holds</h2>
+    <p class="sub" id="where"></p>
+    <div class="scroll"><table class="mini">
+      <thead><tr><th>In the data directory</th><th>Files</th><th>Size</th><th>In a backup</th></tr></thead>
+      <tbody id="parts"></tbody>
+    </table></div>
+  </section>
+
+  <section class="card bk">
+    <h2>Restore</h2>
+    <p>A restore is the CLI's, into a stopped controller's data directory, empty or new: the running
+      controller keeps the login's sessions, the jobs and their dry runs in memory, and a restore replaces the
+      login and the release key, which nothing in this page can do. Every path, size and sum in the backup
+      is checked, and the settings, the release key, the token and the login read as the controller reads
+      them, before anything is put in place.</p>
+    <ol class="bksteps">
+      <li>Stop the controller (<code>docker compose down</code> in <code>controller/</code>).</li>
+      <li>See what the backup holds and check it, writing nothing:
+        <pre class="cmd">docker compose run --rm -v "$PWD/espdns-backup-….age:/backup.age:ro" \
+  --entrypoint /espdns espdns-controller restore -data /data -in /backup.age -dry-run</pre></li>
+      <li>Restore it (the passphrase is asked; an existing directory that isn't empty is refused, or with
+        <code>-force</code> what is there is moved into <code>.before-restore-&lt;time&gt;/</code>):
+        <pre class="cmd">docker compose run --rm -v "$PWD/espdns-backup-….age:/backup.age:ro" \
+  --entrypoint /espdns espdns-controller restore -data /data -in /backup.age</pre></li>
+      <li>Start the controller on it (<code>ESPDNS_DATA=/path/to/new/data</code> in <code>controller/.env</code>, then
+        <code>docker compose up -d</code> in <code>controller/</code>) and log in with the
+        restored login. Chip images, if the backup has none: load them again with <code>espdns release import</code>
+        (docs/operations.md, Get the firmware into the controller).</li>
+    </ol>
+    <p class="sub">Outside Docker: <code>espdns restore -data data -in backup.age [-dry-run] [-force]</code>
+      (<code>-identity key.txt</code> for a backup made to an age key).</p>
+  </section>
+
+  <section class="card bk">
+    <h2>Without a backup</h2>
+    <p>The nodes keep running without the controller. A new data directory with the release key imported
+      finds them again: <code>espdns recover</code> reads each node's <code>/status</code> (only reads),
+      writes <code>settings.json</code> with the nodes in service that trust the key, keeps each node's
+      <code>/status</code> in <code>recovered/</code>, and says what is here for its config and hosted zones.
+      The nodes don't return their configs', zones' or lists' contents: copy your own back into the
+      new data directory, or write them again. From <code>controller/</code>, with the new data directory
+      made and named in <code>.env</code> (docs/operations.md, Recovering from the nodes):</p>
+    <pre class="cmd">docker compose run --rm -T --entrypoint /espdns espdns-controller \
+  key import -data /data -key - -pub /keys/release.pub -recovery-pub /keys/recovery.pub &lt; release.pem
+docker compose run --rm --entrypoint /espdns espdns-controller passwd -data /data
+docker compose run --rm --entrypoint /espdns espdns-controller recover -data /data -dry-run
+docker compose run --rm --entrypoint /espdns espdns-controller recover -data /data</pre>
+  </section>
+</main>
+<script type="module" src="backup.js"></script>
+</body>
+</html>

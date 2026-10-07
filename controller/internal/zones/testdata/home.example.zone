@@ -1,0 +1,23 @@
+; A hosted zone with every supported type. Built into firmware/tests/hosted_example.bin
+; (go test ./internal/zones -update), which the node's host tests answer from.
+$TTL 300
+@           IN SOA  ns1 hostmaster ( 2026100201 3600 900 604800 60 )
+            IN NS   ns1
+            IN MX   10 mail
+            IN TXT  "v=spf1 mx -all"
+            IN CAA  0 issue "letsencrypt.org"
+ns1         IN A    192.0.2.253
+mail        IN A    192.0.2.20
+www         IN A    192.0.2.21
+www         IN AAAA 2001:db8::21
+WWW         IN A    192.0.2.21   ; the same record again: dropped
+alias       IN CNAME www
+chain       IN CNAME alias
+ext         IN CNAME files.other.example.
+nas         600 IN A 192.0.2.30
+_http._tcp  IN SRV  0 5 80 www
+*.dev       IN A    192.0.2.40
+deep.a.b    IN A    192.0.2.41
+; a delegation, with its glue
+lab         IN NS   ns.lab
+ns.lab      IN A    198.51.100.1

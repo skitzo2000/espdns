@@ -1,0 +1,9 @@
+# Classic ESP32, with or without PSRAM: WT32-ETH01, Olimex ESP32-POE, LilyGO T-ETH (LAN8720).
+CONFIG_IDF_TARGET="esp32"
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_IGNORE_NOTFOUND=y
+
+# Wi-Fi, Ethernet and PSRAM together overflow the ESP32's IRAM (by 120 bytes, IDF 5.5): keep
+# Wi-Fi's receive path in flash. These boards are mostly wired.
+CONFIG_ESP_WIFI_RX_IRAM_OPT=n

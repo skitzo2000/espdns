@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS node details</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Node details</h1>
+  <p class="fleet" id="fleet">Reading the nodes…</p>
+  <div class="card scroll nodecard"><table class="nodes">
+    <thead><tr><th class="tog"></th><th>Node</th><th class="wide mid">Board</th><th>State</th>
+      <th class="wide">Firmware</th><th class="wide mid">Up</th><th class="num">QPS</th></tr></thead>
+    <tbody id="nodes"><tr><td colspan="7" class="empty">Looking for nodes…</td></tr></tbody>
+  </table></div>
+  <p class="note" id="updated"></p>
+</main>
+<script type="module" src="nodes.js"></script>
+</body>
+</html>

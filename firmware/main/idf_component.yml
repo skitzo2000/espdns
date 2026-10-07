@@ -1,0 +1,5 @@
+# Components from the ESP component registry. The versions built are the committed locks'
+# (../dependencies.lock.<target>), fetched into managed_components/ before a build; `make
+# components` updates the locks (README.md, Pinned versions).
+dependencies:
+  espressif/mdns: "^1.14.0"

@@ -1,0 +1,42 @@
+; A Response Policy Zone as the feeds publish it: relative names, no $ORIGIN,
+; the SOA across lines. Documentation names only.
+$TTL 300
+@ IN SOA localhost. hostmaster.example.org. (
+        2026100401 ; serial
+        3600       ; refresh
+        600 86400
+        60 )
+  IN NS localhost.
+
+; blocked (NXDOMAIN), with and without its subdomains
+ads.example.com          CNAME .
+*.ads.example.com        CNAME .
+Tracker.Example.NET      300 IN CNAME .   ; case and TTL, class
+*.metrics.example.net    IN 300 CNAME .
+; NODATA
+nodata.example.org       CNAME *.
+; dropped: blocked too
+drop.example.com         CNAME rpz-drop.
+; passthru: allowed
+ok.ads.example.com       CNAME rpz-passthru.
+*.cdn.example.net        CNAME rpz-passthru.
+
+; local data: answers, skipped
+walled.example.com       A     192.0.2.1
+                         AAAA  2001:db8::1
+garden.example.com       CNAME landing.example.org.
+note.example.com         TXT   "a ; inside quotes" "and \" an escape"
+tcp.example.com          CNAME rpz-tcp-only.
+
+; triggers other than the query name, skipped
+32.1.2.0.192.rpz-ip      CNAME .
+24.0.113.0.203.rpz-client-ip CNAME rpz-passthru.
+ns.bad.example.rpz-nsdname   CNAME .
+32.53.2.0.192.rpz-nsip   CNAME .
+
+; not names a list holds
+*                        CNAME .
+bad!name.example.com     CNAME .
+single                   CNAME .
+
+$INCLUDE other.rpz

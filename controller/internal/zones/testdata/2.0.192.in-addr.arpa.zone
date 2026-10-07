@@ -1,0 +1,5 @@
+$TTL 300
+@   IN SOA ns1.home.example. hostmaster.home.example. ( 7 3600 900 604800 60 )
+    IN NS  ns1.home.example.
+253 IN PTR ns1.home.example.
+21  IN PTR www.home.example.

@@ -1,0 +1,19 @@
+{
+  "name": "node1",
+  "network": { "address": "192.0.2.53/24", "gateway": "192.0.2.1" },
+  "forwarders": [ "198.51.100.1", "198.51.100.2", "9.9.9.9" ],
+  "upstream_timeout_ms": 1500,
+  "forward_zones": [
+    { "zone": "_acme-challenge.example.com", "forwarder": "198.51.100.53" },
+    { "zone": "partner.example", "forwarder": "9.9.9.9" },
+    { "zone": "lab.example", "forwarder": "192.0.2.20" }
+  ],
+  "secondary": {
+    "primary": "192.0.2.254",
+    "zones": [ "local", "example.com", "example.net", "example.org", "home.example" ],
+    "soa_poll_s": 60,
+    "retry_s": 30
+  },
+  "time": { "tz": "UTC0" },
+  "blocking": { "answer": "null", "ttl": 10 }
+}

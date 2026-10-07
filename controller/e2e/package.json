@@ -1,0 +1,11 @@
+{
+  "name": "espdns-e2e",
+  "private": true,
+  "description": "The controller's browser tests: every page with no CSP violation, the builder's flasher loading with a stubbed Web Serial. make e2e.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

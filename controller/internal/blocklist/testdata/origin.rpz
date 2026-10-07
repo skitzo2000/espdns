@@ -1,0 +1,15 @@
+; An RPZ written with $ORIGIN and absolute names, as BIND or Technitium export one
+$ORIGIN rpz.example.org.
+$TTL 1h
+@                         SOA ns.example.org. hostmaster.example.org. 7 3600 600 86400 60
+@                         NS  ns.example.org.
+ads.example.com           CNAME .
+ads.example.com.rpz.example.org. CNAME *.
+*.track.example.net.rpz.example.org. CNAME .
+$ORIGIN example.com.rpz.example.org.
+beacon                    CNAME .
+*.pixel                   CNAME rpz-drop.
+; outside the zone: skipped
+stray.example.net.        CNAME .
+; an NS below the apex is no zone record: local data
+sub.example.com.rpz.example.org. NS ns.example.org.

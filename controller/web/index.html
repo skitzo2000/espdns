@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS nodes</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="shell.css">
+</head>
+<body>
+<main>
+  <div class="head">
+    <div class="lead summary">
+      <h1 id="sentence">Reading the nodes…</h1>
+      <p class="muted" id="sentence-sub"></p>
+    </div>
+    <div class="row" id="head-actions">
+      <button class="btn" type="button" id="copy-dns" disabled>Copy DNS servers</button>
+      <div id="add-node"></div>
+    </div>
+  </div>
+  <div id="update" hidden></div>
+  <section>
+    <div class="facts" id="facts"></div>
+    <div class="panel rows nodes" id="nodes">
+      <div class="r headr"><div>Node</div><div>State</div><div>Address</div><div>Load</div><div></div></div>
+    </div>
+  </section>
+  <section id="hour" hidden>
+    <div class="sec-head"><h2>Last hour</h2><a class="small muted" href="querylog.html">Open the query log ›</a></div>
+    <div class="minis" id="minis"></div>
+  </section>
+</main>
+<script type="module" src="home.js"></script>
+</body>
+</html>

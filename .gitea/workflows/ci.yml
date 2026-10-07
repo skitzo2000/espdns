@@ -1,0 +1,220 @@
+# CI: on every push, the host tests, the controller's vet and tests (in a pinned Go image), and a
+# build of every chip image (and of the transitional images, as a deployment with nodes from
+# before board partitions builds them, here with the examples' documentation addresses).
+#
+# The firmware jobs run in the pinned ESP-IDF image itself (firmware/Makefile IDF_IMAGE; each
+# job checks it is the same version) and call the Makefile with NATIVE=1, which runs its
+# commands directly instead of in docker. Nothing here signs anything and no secret is used:
+# a build embeds only the committed public keys (firmware/keys/*.pub); releases are signed
+# when they are pushed (make ota, make fleet-rollout), never by CI.
+#
+# Every image and action is pinned by digest (an image) or commit (an action), the tag it
+# was in a comment, so a run uses exactly what was reviewed; controller/pins_test.go
+# refuses one that is not, and firmware/README.md, Pinned versions, says how to bump them.
+name: CI
+
+# Every push, to any branch. Not pull_request as well: the PRs here come from branches of
+# this repository, whose head commits the push has already built (a PR shows that run's
+# statuses), so it would only build each commit twice.
+on:
+  push:
+
+# A newer push to a branch supersedes the run still going for it; on main every merge is
+# built to the end.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  host-tests:
+    name: Firmware host tests
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v5.5.5@sha256:a9231d0697ab8f7517cc072e93b7c83e04907bfbfba80b6440d7dbbf90665cf2  # firmware/Makefile IDF_IMAGE
+    steps:
+      # The ESP-IDF image has no Node, which the checkout action needs
+      - name: Node for the actions
+        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
+
+      - name: Pinned ESP-IDF
+        run: |
+          want=$(make -s -C firmware print-idf-image | sed 's/@.*//; s/.*://')
+          have=v$(awk '/define ESP_IDF_VERSION_(MAJOR|MINOR|PATCH) /{printf "%s%s", s, $3; s="."}' \
+                  "$IDF_PATH/components/esp_common/include/esp_idf_version.h")
+          echo "Makefile: $want, container: $have"
+          [ "$want" = "$have" ] || { echo "::error::the workflow's ESP-IDF image is not firmware/Makefile's IDF_IMAGE"; exit 1; }
+
+      # The build matrix below names every chip image (firmware/images/*) and every transitional
+      # image the examples name: each board firmware/local.mk.example keeps an address for
+      # (STATIC_IP_<board>) and each board controller/local.mk.example has a rollout push
+      # (FLEET_BOARDS). The Makefiles themselves name no board or address.
+      - name: Build matrix covers every image
+        run: |
+          wf=.gitea/workflows/ci.yml
+          want=$(ls firmware/images | sort | xargs)
+          have=$(sed -n 's/^ *- image: *\([^ ]*\).*/\1/p' $wf | sort | xargs)
+          echo "chip images: $want; built: $have"
+          [ "$want" = "$have" ] || { echo "::error::$wf: the firmware matrix must list every firmware/images/*"; exit 1; }
+          want=$( { sed -n 's/^STATIC_IP_\([^ :?+=]*\) *[:?+]*=.*/\1/p' firmware/local.mk.example
+                    sed -n 's/^FLEET_BOARDS *[:?+]*= *//p' controller/local.mk.example | tr ' ' '\n'; } | sed '/^$/d' | sort -u | xargs)
+          have=$(sed -n 's/^ *- board: *\([^ ]*\).*/\1/p' $wf | sort | xargs)
+          echo "transitional images: $want; built: $have"
+          [ -n "$want" ] && [ "$want" = "$have" ] || { echo "::error::$wf: the firmware matrix must list every STATIC_IP_<board> and FLEET_BOARDS board of the local.mk examples"; exit 1; }
+          # No site's address, board or node in the tracked Makefiles: a deployment's are in its
+          # local.mk. A literal value (not a $(...) worked out from others) for one of the
+          # variables a site sets, however it is assigned, is refused.
+          if grep -nE '^[[:space:]]*((override|export)[[:space:]]+)*(STATIC_IP[A-Za-z0-9_.-]*|STATIC_NETMASK|STATIC_GATEWAY|GATEWAY|ADDRESS[A-Za-z0-9_.-]*|DEFAULT_BOARD|BOARD|SITE_DEFAULTS|FLEET_BOARDS|NODES|CANARY|CONFIGS|HOST|NEW_HOST|SETTINGS_SEED|CONFIG_SEEDS|CASE_LABEL)[[:space:]]*[:?+!]?=[[:space:]]*[^[:space:]$#]' \
+               firmware/Makefile controller/Makefile; then
+            echo "::error::a site value in a tracked Makefile: it belongs in local.mk (local.mk.example)"; exit 1
+          fi
+          # Nor a private (RFC 1918) or shared (RFC 6598) address in what builds an image or
+          # seeds a deployment: the Makefiles, the firmware defaults and build files, the board
+          # catalog, the examples. Their examples use documentation addresses (RFC 5737).
+          priv='(^|[^0-9.])(10\.[0-9]{1,3}|172\.(1[6-9]|2[0-9]|3[01])|192\.168|100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7]))\.[0-9]{1,3}\.[0-9]{1,3}([^0-9]|$)'
+          if grep -rnE "$priv" firmware/Makefile controller/Makefile firmware/main/config.h firmware/main/CMakeLists.txt \
+               firmware/sdkconfig.defaults firmware/images boards configs firmware/*.example controller/*.example; then
+            echo "::error::a private address in a build file, the board catalog or an example: a deployment's belong in its local.mk, site-defaults.h or data directory"; exit 1
+          fi
+          # Nor in the test vectors, fixtures and test code: they use documentation addresses
+          # (RFC 5737, RFC 3849) and names (example.com, .example, home.arpa), the fake
+          # networks some tests build included. A test that needs a private address builds it
+          # (netip.AddrFrom4) rather than writing it. The private ranges' reverse zones are
+          # refused too, in a file's text and in its name.
+          testpriv='(^|[^0-9.])(10\.[0-9]{1,3}|172\.(1[6-9]|2[0-9]|3[01])|192\.168|100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7]))\.[0-9]{1,3}\.[0-9]{1,3}([^0-9]|$)'
+          testpriv="$testpriv"'|(^|[^0-9])(10|(1[6-9]|2[0-9]|3[01])\.172|168\.192|(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.100)\.in-addr\.arpa'
+          testfiles=$(find firmware/tests controller -path '*/node_modules' -prune -o -type f \
+                        \( -path 'firmware/tests/*' -o -path 'controller/e2e/*' -o -path '*/testdata/*' -o -name '*_test.go' \) -print | sort -u)
+          hits=$( { printf '%s\n' "$testfiles" | xargs -d '\n' grep -nIiE "$testpriv"
+                    printf '%s\n' "$testfiles" | grep -iE "$testpriv"; } || true)
+          if [ -n "$hits" ]; then
+            echo "$hits"
+            echo "::error::a private address in a test vector, fixture or test: use a documentation address (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24, 2001:db8::/32)"; exit 1
+          fi
+
+      # With the ESP-IDF environment, as the image's entrypoint gives `make test` in docker: the
+      # tools' tests run version.cmake with ESP-IDF's cmake, on PATH only after export.sh
+      - name: Host unit tests (ASan + UBSan)
+        run: |
+          . "$IDF_PATH/export.sh" >/dev/null
+          make -C firmware test NATIVE=1
+
+  # One pinned image (the Go version controller/go.mod names, as controller/Dockerfile's), so
+  # the Go and make versions are the same on every runner; bump it with go.mod's go line.
+  controller:
+    name: Controller vet and tests
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.26.7-bookworm@sha256:e8c859f5632dcfde7b32d2012b4351728f6437930887c2f6a91ea242459e5514  # controller/go.mod go
+    steps:
+      # The Go image has no Node, which the checkout action needs
+      - name: Node for the actions
+        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
+
+      - name: Pinned Go
+        run: |
+          want=go$(sed -n 's/^go //p' controller/go.mod)
+          have=$(go env GOVERSION)
+          echo "go.mod: $want, container: $have; $(make --version | head -1)"
+          [ "$want" = "$have" ] || { echo "::error::the workflow's Go image is not controller/go.mod's go version"; exit 1; }
+
+      - name: go vet, go test
+        run: make -C controller test
+
+  firmware:
+    name: Firmware ${{ matrix.image }}${{ matrix.board }}
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v5.5.5@sha256:a9231d0697ab8f7517cc072e93b7c83e04907bfbfba80b6440d7dbbf90665cf2  # firmware/Makefile IDF_IMAGE
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Chip images, as `make images` builds them: no board and no address built in
+          - image: esp32
+          - image: esp32c3
+          - image: esp32c6
+          - image: esp32p4
+          - image: esp32p4-rev1
+          - image: esp32s3-octal
+          - image: esp32s3-quad
+          # Transitional images: a chip image with a catalog board and a node's address built
+          # in, as a deployment's nodes from before board partitions run them (make
+          # fleet-firmware), here with a documentation address and the example site defaults.
+          # They compile code the chip images do not (the fallback board, the built-in
+          # address, the site defaults).
+          - board: p4-ip101
+          - board: ws-s3-eth
+    steps:
+      - name: Node for the actions
+        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
+
+      - name: Pinned ESP-IDF
+        run: |
+          want=$(make -s -C firmware print-idf-image | sed 's/@.*//; s/.*://')
+          have=v$(awk '/define ESP_IDF_VERSION_(MAJOR|MINOR|PATCH) /{printf "%s%s", s, $3; s="."}' \
+                  "$IDF_PATH/components/esp_common/include/esp_idf_version.h")
+          echo "Makefile: $want, container: $have"
+          [ "$want" = "$have" ] || { echo "::error::the workflow's ESP-IDF image is not firmware/Makefile's IDF_IMAGE"; exit 1; }
+
+      - name: Build
+        run: |
+          # The checkout may belong to another user than the container's, for any git the build runs
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          . "$IDF_PATH/export.sh" >/dev/null
+          if [ -n "${{ matrix.image }}" ]; then
+            make -C firmware build NATIVE=1 IMAGE=${{ matrix.image }} BOARD= ADDRESS= STATIC_IP= 2>&1 | tee build.log
+          else
+            # A documentation address and the example site defaults: what a deployment's
+            # local.mk gives (local.mk.example), never one of its own
+            make -C firmware build NATIVE=1 BOARD=${{ matrix.board }} STATIC_IP=192.0.2.53 STATIC_NETMASK=255.255.255.0 \
+              STATIC_GATEWAY=192.0.2.1 SITE_DEFAULTS=site-defaults.h.example 2>&1 | tee build.log
+          fi
+
+      # The build used the committed component lock (firmware/dependencies.lock.<target>) as
+      # it is: a build that solved again and rewrote it would build other components
+      - name: Component lock unchanged
+        run: |
+          git status --porcelain -- 'firmware/dependencies.lock.*'
+          [ -z "$(git status --porcelain -- 'firmware/dependencies.lock.*')" ] || \
+            { echo "::error::the build changed the component lock: make -C firmware components, and commit it"; exit 1; }
+
+      # The build is warning-free; keep it so (ESP-IDF already makes most -Wall warnings errors)
+      - name: No compiler warnings
+        run: |
+          if grep -E '(: warning:|^warning:)' build.log; then
+            echo "::error::the build has compiler warnings"; exit 1
+          fi
+
+      - name: Export the chip image (dist/images/, as the controller's builder imports it)
+        if: matrix.image != ''
+        run: |
+          . "$IDF_PATH/export.sh" >/dev/null
+          cd firmware && python tools/export_image.py ${{ matrix.image }}
+
+      - name: Upload the chip image
+        if: matrix.image != ''
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+        with:
+          name: image-${{ matrix.image }}
+          path: firmware/dist/images/${{ matrix.image }}/
+          retention-days: 14
+
+      # Built on a documentation address: for checking, never for a node (a rollout and
+      # tools/ota_push.py refuse it for a node that falls back on its built-in address)
+      - name: Upload the transitional image
+        if: matrix.board != ''
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+        with:
+          name: transitional-${{ matrix.board }}-example-address
+          path: firmware/build/${{ matrix.board }}/dns2.bin
+          retention-days: 14

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS blocking</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Blocklists</h1>
+  <p class="lead">Each list compiled from its sources, and each node's blocking.</p>
+  <div id="banner"></div>
+  <section class="card blknodes" id="nodes" aria-label="Nodes"><div class="empty">Loading the nodes…</div></section>
+  <div class="cfgs blkgrid">
+    <div class="cfgside">
+      <div class="card boardlist" id="lists" aria-label="Lists"><div class="empty">Loading lists…</div></div>
+      <form class="card newcfg" id="newlist" autocomplete="off">
+        <label>New list <input id="newlistname" placeholder="main" spellcheck="false" autocapitalize="off"></label>
+        <span class="sub">Compiled into lists/&lt;name&gt;.bin.</span>
+        <button class="btn small" type="submit">Create</button>
+      </form>
+      <div class="card boardlist" id="sources" aria-label="Source files"></div>
+      <form class="card newcfg" id="newsrc" autocomplete="off">
+        <label>New source file <input id="newsrcname" placeholder="allow.txt" spellcheck="false" autocapitalize="off"></label>
+        <span class="sub">A list to block or allow, popular or must-resolve names: .txt, .zone, .rpz, .csv, .hosts or .list.</span>
+        <button class="btn small" type="submit">Create</button>
+      </form>
+      <div class="card newcfg" id="deleted" hidden></div>
+    </div>
+    <div class="card detail cfgmain" id="main"><div class="empty">Choose a list or a source file.</div></div>
+  </div>
+</main>
+<script type="module" src="blocklists.js"></script>
+</body>
+</html>

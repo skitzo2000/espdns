@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS query log</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Traffic</h1>
+  <nav class="tabs" aria-label="Traffic"><a href="traffic.html">Charts</a><a href="querylog.html" aria-current="page">Query log</a></nav>
+  <p class="lead">The fleet's recent queries, newest first, as each node logs them.</p>
+  <form class="card qlbar" id="filters" autocomplete="off">
+    <label>Node <select id="f-node"><option value="">every node</option></select></label>
+    <label>Client <input id="f-client" spellcheck="false" placeholder="192.0.2."></label>
+    <label>Name <input id="f-name" spellcheck="false" placeholder="example.com"></label>
+    <label>Result <select id="f-result">
+      <option value="">any</option>
+      <option>cache</option><option>forwarded</option><option>hosted</option><option>secondary</option>
+      <option>blocked</option><option>overridden</option><option>refused</option><option>servfail</option>
+      <option>error</option><option>notify</option>
+    </select></label>
+    <label>Type <input id="f-qtype" spellcheck="false" placeholder="A, AAAA…" class="short"></label>
+    <div class="qlacts">
+      <button class="btn small" type="button" id="pause">Pause</button>
+      <button class="btn small" type="reset" id="clear">Clear filters</button>
+    </div>
+  </form>
+  <div id="qlnodes" class="qlnodes"></div>
+  <p class="sub" id="qlstate"></p>
+  <div class="card scroll"><table class="qlog">
+    <thead><tr><th>Time</th><th>Node</th><th>Client</th><th>Name</th><th>Type</th><th>Result</th><th class="num">Took</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+  </table></div>
+</main>
+<script type="module" src="querylog.js"></script>
+</body>
+</html>

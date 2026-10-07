@@ -1,0 +1,81 @@
+# The espDNS controller as a Docker service (docs/getting-started.md). Docker Compose
+# v2.17 or newer (additional_contexts; docker compose version), with BuildKit. From this
+# directory:
+#
+#   cp .env.example .env      # once: ESPDNS_UID and ESPDNS_GID (id -u, id -g) are required
+#   mkdir -m 700 data         # once: made by you, so it is yours (docker would make it as root)
+#   docker compose up -d --build
+#   docker compose logs -f
+#   docker compose down
+#
+# `docker compose up -d --build` again after a pull or an edit rebuilds the image and
+# restarts the controller on it. The CLI (espdns) is in the same image:
+#   docker compose run --rm -T --entrypoint /espdns espdns-controller <command> -data /data ...
+# (docs/reference/cli.md).
+# The project's name, whatever the directory is called (not "controller"), so
+# docker compose down here never touches another project's containers
+name: espdns
+services:
+  espdns-controller:
+    build:
+      context: .
+      # The shipped board catalog, copied into the image at /catalog (the Dockerfile's
+      # COPY --from=boards; docker build --build-context boards=../boards)
+      additional_contexts:
+        boards: ../boards
+        # The repository's VERSION, linked into the binaries (the Dockerfile's COPY
+        # --from=version): the repository's top, of which its .dockerignore lets in VERSION only
+        version: ..
+        # The firmware's public keys, at /keys in the image (the Dockerfile's COPY --from=keys),
+        # which espdns release verify checks a release with: its .dockerignore lets in only them
+        keys: ../firmware/keys
+    image: ${ESPDNS_IMAGE:-espdns-controller}
+    # A fixed name: docker logs/stop espdns-controller find it
+    container_name: ${ESPDNS_CONTAINER:-espdns-controller}
+    restart: unless-stopped
+    # Host networking: mDNS discovery and the nodes on the LAN. The dashboard itself listens
+    # on localhost only (the controller refuses any other address): http://127.0.0.1:8480.
+    network_mode: host
+    # The data directory's owner, so what the controller writes there stays yours. Compose
+    # can't know the host user, and a guess (1000:1000) is wrong on many systems: ESPDNS_UID
+    # and ESPDNS_GID in .env (id -u, id -g), or compose stops here saying so.
+    user: "${ESPDNS_UID:?set ESPDNS_UID in .env (cp .env.example .env; id -u)}:${ESPDNS_GID:?set ESPDNS_GID in .env (id -g)}"
+    command: ["-listen", "${ESPDNS_LISTEN:-127.0.0.1:8480}"]
+    # Hardening: no Linux capabilities at all (it binds a port above 1024 and touches only
+    # files it owns), no gaining privileges through a set-id binary, a read-only root
+    # filesystem (the image is two static binaries and the board catalog: nothing there is
+    # written), and a small /tmp in memory (nothing uses it: a backup is written in the data
+    # directory's .tmp/), not executable.
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+    # Limits: memory for the largest work it does, compiling a blocklist (about 220 bytes a
+    # domain at its peak: 2.6 million domains took 554 MiB), with Go's collector told to work
+    # harder before the limit (GOMEMLIMIT, about nine tenths of it) rather than be killed at
+    # it; processes and threads (it runs about 20; the health check adds one). Each in .env:
+    # ESPDNS_MEM_LIMIT, ESPDNS_GOMEMLIMIT, ESPDNS_PIDS_LIMIT.
+    mem_limit: ${ESPDNS_MEM_LIMIT:-2g}
+    environment:
+      GOMEMLIMIT: ${ESPDNS_GOMEMLIMIT:-1800MiB}
+    pids_limit: ${ESPDNS_PIDS_LIMIT:-256}
+    volumes:
+      # All the controller's state (settings.json, auth.json, keys/, configs/, zones/, log/,
+      # firmware/), shared with the CLI. It must exist (mkdir -m 700 data): never made here,
+      # as root. The controller refuses to start if it can't
+      # write there.
+      - type: bind
+        source: ${ESPDNS_DATA:-./data}
+        target: /data
+        bind:
+          create_host_path: false
+    # A running job is stopped and recorded on SIGTERM before the controller exits
+    stop_grace_period: 30s
+    # The image is distroless (no shell, no curl): the controller binary checks itself
+    healthcheck:
+      test: ["CMD", "/espdns-controller", "-healthcheck", "-listen", "${ESPDNS_LISTEN:-127.0.0.1:8480}"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3

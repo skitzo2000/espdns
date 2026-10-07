@@ -1,0 +1,39 @@
+# A deployment's own make settings for controller/ (docs/rollout.md, This site). Copy this to
+# controller/local.mk in the main checkout (untracked: .gitignore; every git worktree reads
+# the main checkout's) and put your own values in. The project's Makefile has no default for
+# any of them: without one, a target that needs it stops and names it. Use ?= so the command
+# line and the environment still win (make fleet-rollout-dry NODES=... for once).
+# Documentation addresses (RFC 5737) below: put your own.
+
+# ---- The fleet ----
+# The nodes a rollout changes, in rollout order after the canary (KIND=firmware, blocklist,
+# overrides, zones). Usually the same as settings.json's "nodes".
+NODES              ?= 192.0.2.52 192.0.2.53
+# Changed first, if it is one of the nodes changed; empty: settings.json's "canary" (the Push
+# page's too) if it is one of them, else the first of them
+CANARY             ?= 192.0.2.52
+# The catalog boards (boards/<board>.json) whose transitional firmware the nodes run: make
+# fleet-firmware builds them (with firmware/local.mk's STATIC_IP_<board>), KIND=firmware
+# pushes them. No two may share a chip image.
+FLEET_BOARDS       ?= p4-ip101 ws-s3-eth
+# KIND=config's usual node and its config (in the data directory's configs/), host=file
+CONFIGS            ?= 192.0.2.53=node1.json
+
+# ---- Secrets ----
+# Secrets are never written here: each comes from an environment variable (export it, or let
+# SECRET_RUN put it there) or a file. The zone primary's API token (a primary of a kind with
+# an API, e.g. technitium): the environment variable that holds it. None: adoption uses the
+# token make primary-import put in the data directory, if any.
+#PRIMARY_TOKEN_ENV    ?= ESPDNS_PRIMARY_TOKEN
+# The release signing key: $ESPDNS_RELEASE_KEY (the PEM, or base64 of it), or a file
+#RELEASE_KEY_FILE     ?= ../firmware/secrets/release.pem
+# A password manager's command that runs a command with the named variables set to their
+# secrets: $(1) is the list of variable names (ESPDNS_RELEASE_KEY, PRIMARY_TOKEN_ENV's,
+# ESPDNS_ADMIN_PASSWORD, ESPDNS_BACKUP_PASSPHRASE). Use = (not :=), so $(1) is filled in.
+#SECRET_RUN            = /path/to/secrets-tool exec $(1) --
+
+# ---- The data directory ----
+# Seed a new data directory from your own files, kept outside the repo (make data copies
+# them only where there is no file yet): a settings.json, and a directory of node configs.
+#SETTINGS_SEED      ?= /path/to/settings.json
+#CONFIG_SEEDS       ?= /path/to/configs

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS jobs</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Job history</h1>
+  <p class="lead">Fleet operations run one at a time, under the fleet lock the CLI takes too.</p>
+  <div class="card jobbar">
+    <button class="btn" id="check">Check the fleet</button>
+    <span id="lock" class="sub"></span>
+  </div>
+
+  <div class="card job" id="job" hidden>
+    <div class="row">
+      <h2 id="job-title"></h2>
+      <span id="job-state" class="pill"></span>
+      <button class="btn" id="stop" hidden>Stop</button>
+    </div>
+    <div id="job-sub" class="sub"></div>
+    <pre id="log"></pre>
+  </div>
+
+  <h2 class="dsec">Recent jobs</h2>
+  <div class="card scroll"><table>
+    <thead><tr><th>Started</th><th>Job</th><th>By</th><th>State</th><th>Took</th><th>Result</th></tr></thead>
+    <tbody id="jobs"><tr><td colspan="6" class="empty">No jobs yet.</td></tr></tbody>
+  </table></div>
+
+  <h2 class="dsec">Action log</h2>
+  <div class="card scroll"><table>
+    <thead><tr><th>When</th><th>Event</th><th>From</th><th>Who</th><th>What</th><th>Result</th></tr></thead>
+    <tbody id="actions"><tr><td colspan="6" class="empty">Nothing yet.</td></tr></tbody>
+  </table></div>
+</main>
+<script type="module" src="jobs.js"></script>
+</body>
+</html>

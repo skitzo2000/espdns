@@ -1,0 +1,36 @@
+# A deployment's own make settings for firmware/ (docs/rollout.md, This site). Copy this to
+# firmware/local.mk in the main checkout (untracked: .gitignore; every git worktree reads the
+# main checkout's, and controller/'s make fleet-firmware builds with it) and put your own
+# values in. The project's Makefile has no default for any of them: without one, a target
+# that needs it stops and names it. Use ?= so the command line still wins.
+# Documentation addresses (RFC 5737) below: put your own.
+
+# The node make ota, status, boottime and bench-ota reach
+HOST                ?= 192.0.2.53
+# The board make build (and ota) builds with neither BOARD= nor IMAGE=
+DEFAULT_BOARD       ?= p4-ip101
+
+# Transitional images (make build BOARD=<board>, make fleet-firmware): a node from before
+# board partitions keeps the address its earlier firmware was built with, so each such
+# board's address is built in, with the netmask and gateway that go with it (required with
+# one). A new node needs none of these: it is flashed with a chip image and a board partition
+# (make factory, or the controller's builder), which carry its address. controller/'s make
+# fleet-firmware refuses a FLEET_BOARDS board with no STATIC_IP_<board> here.
+STATIC_IP_p4-ip101  ?= 192.0.2.53
+STATIC_IP_ws-s3-eth ?= 192.0.2.52
+STATIC_NETMASK      ?= 255.255.255.0
+# Also make factory's GATEWAY for a static ADDRESS, unless GATEWAY= is given
+STATIC_GATEWAY      ?= 192.0.2.1
+
+# The firmware defaults built into every image made here (zone primary, zones, forwarders):
+# a header next to this file, from site-defaults.h.example. None: the project's (no primary,
+# no zones), and a node serves your zones once its node config names them.
+#SITE_DEFAULTS      ?= $(dir $(FW_LOCAL_MK))site-defaults.h
+
+# The text on the 3D-printed case's lid (make enclosure)
+#CASE_LABEL         ?= dns1 · 192.0.2.53
+
+# A password manager's command for make release-key-restore and key-restore, as
+# controller/local.mk.example has it: $(1) the variable names (ESPDNS_RELEASE_KEY,
+# DNS2_OTA_KEY). Empty: export them.
+#SECRET_RUN          = /path/to/secrets-tool exec $(1) --

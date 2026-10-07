@@ -1,0 +1,4 @@
+# ESP32-P4 silicon v3 and later. Wired only.
+CONFIG_IDF_TARGET="esp32p4"
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_IGNORE_NOTFOUND=y

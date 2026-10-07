@@ -1,0 +1,9 @@
+/* Just enough mbedTLS for the host tests to check release signatures (release.c). */
+#pragma once
+#define MBEDTLS_BIGNUM_C
+#define MBEDTLS_ECP_C
+#define MBEDTLS_ECDSA_C
+#define MBEDTLS_ECP_DP_SECP256R1_ENABLED
+#define MBEDTLS_ASN1_PARSE_C
+#define MBEDTLS_ASN1_WRITE_C
+#define MBEDTLS_SHA256_C

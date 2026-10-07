@@ -1,0 +1,16 @@
+# The build context is an allowlist: only what the image's build needs (the Go module, the
+# commands, the packages, the embedded web UI), so nothing else in this directory gets in,
+# whatever it is called: the data directory (ESPDNS_DATA can name any directory here, not just
+# data/), .env, local.mk, a binary built on the host, the browser tests.
+*
+!go.mod
+!go.sum
+!cmd/
+!internal/
+!web/
+# Not in a build, inside those either: the tests and their data
+**/*_test.go
+**/testdata/
+# Never in a build context, wherever one is put: a key, the login
+**/*.pem
+**/auth.json

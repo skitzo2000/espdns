@@ -1,0 +1,36 @@
+/*
+ * A deployment's own firmware defaults (main/config.h): the lowest layer of a node's
+ * settings, which a node config overrides field by field. A node runs on them until it is
+ * given a config, or if the config it has is refused. The project's own are neutral (no zone
+ * primary, no zones, no conditional forwarders, Quad9 as the forwarders); a deployment that
+ * wants its nodes to serve its zones even before (or without) a config builds its own in.
+ *
+ * Copy this file to firmware/site-defaults.h in the main checkout (untracked: .gitignore)
+ * and name it in firmware/local.mk:
+ *
+ *     SITE_DEFAULTS ?= $(dir $(FW_LOCAL_MK))site-defaults.h
+ *
+ * Every image built there (make build, make images, make factory, make fleet-firmware in
+ * controller/) then carries them. Define any of the macros below; what is left out keeps the
+ * project's default. Each list is the body of a brace-enclosed initializer. The values here
+ * are documentation addresses (RFC 5737) and example zones: put your own.
+ *
+ * The host tests (tests/Makefile) build with this file, so it always compiles and its values
+ * are what the tests check.
+ */
+
+/* The zone primary the secondary zones are copied from (AXFR/IXFR, NOTIFY) */
+#define DNS2_PRIMARY "192.0.2.254"
+
+/* The zones copied from it */
+#define DNS2_SECONDARY_ZONES_LIST "local", "example.com", "example.net", "example.org", "home.example"
+
+/* Where every other name is forwarded (at most 4) */
+#define DNS2_FORWARDERS_LIST "198.51.100.1", "198.51.100.2", "9.9.9.9"
+
+/* Conditional forwarders: { "zone", "forwarder" }. A primary's can't be transferred, so they
+ * are copied here (or into the node configs) by hand. */
+#define DNS2_FORWARDER_ZONES_LIST                               \
+    { "_acme-challenge.example.com", "198.51.100.53" },        \
+    { "partner.example",             "9.9.9.9" },              \
+    { "lab.example",                 "192.0.2.20" }

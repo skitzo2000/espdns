@@ -1,0 +1,6 @@
+data/
+/espdns-controller
+/espdns
+/local.mk
+/.env
+/e2e/screenshots/

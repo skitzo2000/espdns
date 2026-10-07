@@ -1,0 +1,1844 @@
+[
+ {
+  "name": "p4-ip101 from the catalog, every service",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 32768,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 32768,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    327680,
+    32505856
+   ],
+   "total": [
+    282624,
+    31451447
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     5101881
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     1179646
+    ],
+    "hosted": [
+     8192,
+     3145728
+    ],
+    "blocking": [
+     172032,
+     20975616
+    ],
+    "querylog": [
+     0,
+     1048576
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "p4-ip101 partition from before the plan's keys",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 32768,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "hosted_zones_kb": 1024
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 32768,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    327680,
+    32505856
+   ],
+   "total": [
+    282624,
+    31451447
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     5101881
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     1179646
+    ],
+    "hosted": [
+     8192,
+     3145728
+    ],
+    "blocking": [
+     172032,
+     20975616
+    ],
+    "querylog": [
+     0,
+     1048576
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "ws-s3-eth from the catalog, every service",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    7268663
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     786432
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     65536
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "ws-s3-eth partition from before the plan's keys",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "hosted_zones_kb": 256
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    7268663
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     786432
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     65536
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "xiao-s3-sense from the catalog",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "xiao-s3-sense",
+   "title": "Seeed XIAO ESP32S3 Sense",
+   "image": "esp32s3-octal",
+   "flash_mb": 8,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 7,
+     "mosi": 9,
+     "miso": 8
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 1,
+    "int": 2,
+    "rst": 4,
+    "mhz": 20,
+    "optional": true
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 2,
+    "cs": 21
+   },
+   "led": {
+    "kind": "none"
+   },
+   "wifi": {
+    "tx_power_dbm": 15
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "notes": "Wi-Fi as it ships; wired with a W5500 module on the SD card's bus: CS D0 (GPIO1), INT D1 (GPIO2), RST D3 (GPIO4). The user LED shares GPIO21 with the SD card's chip select: use an add-on LED. At 20 dBm transmit, packets were lost and the access point dropped it for low ACK; 15 dBm measured clean."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    7268663
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     786432
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     65536
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "ws-s3-eth with only the listeners",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    94208,
+    3922233
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     0,
+     0
+    ],
+    "hosted": [
+     0,
+     0
+    ],
+    "blocking": [
+     0,
+     0
+    ],
+    "querylog": [
+     0,
+     0
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "a P4 blocklist share too big for its PSRAM",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 32768,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 30000,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 32768,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 30000,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "fits": false,
+   "capacity": [
+    327680,
+    32505856
+   ],
+   "total": [
+    282624,
+    41199927
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     5101881
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     1179646
+    ],
+    "hosted": [
+     8192,
+     3145728
+    ],
+    "blocking": [
+     172032,
+     30724096
+    ],
+    "querylog": [
+     0,
+     1048576
+    ]
+   },
+   "error": "PSRAM: the services need 40235 KB, the board has 31744 KB for them"
+  }
+ },
+ {
+  "name": "the same with blocking off",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 32768,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 30000,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "secondary",
+   "hosted"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 32768,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 30000,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    327680,
+    32505856
+   ],
+   "total": [
+    110592,
+    9427255
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     5101881
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     1179646
+    ],
+    "hosted": [
+     8192,
+     3145728
+    ],
+    "blocking": [
+     0,
+     0
+    ],
+    "querylog": [
+     0,
+     0
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "a P4 index share too big for its internal RAM",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 32768,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 1024,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 32768,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 1024,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "fits": false,
+   "capacity": [
+    327680,
+    32505856
+   ],
+   "total": [
+    1167360,
+    31451447
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     5101881
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     1179646
+    ],
+    "hosted": [
+     8192,
+     3145728
+    ],
+    "blocking": [
+     1056768,
+     20975616
+    ],
+    "querylog": [
+     0,
+     1048576
+    ]
+   },
+   "error": "internal RAM: the services need 1140 KB, the board has 320 KB for them"
+  }
+ },
+ {
+  "name": "no board definition on an S3 with 8 MB",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": null,
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 64,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    6678839
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     196608
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     65536
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "the board says PSRAM, the chip found none",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 0,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 0,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 32
+   },
+   "fits": false,
+   "capacity": [
+    327680,
+    0
+   ],
+   "total": [
+    31734071,
+    0
+   ],
+   "shares": {
+    "dns": [
+     5196089,
+     0
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     1187838,
+     0
+    ],
+    "hosted": [
+     3153920,
+     0
+    ],
+    "blocking": [
+     21147648,
+     0
+    ],
+    "querylog": [
+     1048576,
+     0
+    ]
+   },
+   "error": "internal RAM: the services need 30991 KB, the board has 320 KB for them"
+  }
+ },
+ {
+  "name": "the controller: the chip unknown",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": -1,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    7268663
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     786432
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     65536
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "a cache too small for its answers",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 512,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 512,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 64,
+    "fwd_pending": 32
+   },
+   "fits": false,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    94208,
+    1431865
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     1431865
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     0,
+     0
+    ],
+    "hosted": [
+     0,
+     0
+    ],
+    "blocking": [
+     0,
+     0
+    ],
+    "querylog": [
+     0,
+     0
+    ]
+   },
+   "error": "cache: 8192 answers need at least 872 KB, memory.cache_kb is 512"
+  }
+ },
+ {
+  "name": "an image without defaults",
+  "image": "esp32h2",
+  "chip_psram_kb": -1,
+  "board": {
+   "name": "x",
+   "image": "esp32h2",
+   "psram_mb": 0
+  },
+  "services": [
+   "dns"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 0,
+    "internal_kb": 96,
+    "cache_kb": 64,
+    "cache_entries": 512,
+    "blocklist_kb": 128,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 64,
+    "secondary_zones_kb": 64,
+    "querylog_kb": 0,
+    "fwd_pending": 8
+   },
+   "fits": false,
+   "capacity": [
+    98304,
+    0
+   ],
+   "total": [
+    1028921,
+    0
+   ],
+   "shares": {
+    "dns": [
+     1028921,
+     0
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     0,
+     0
+    ],
+    "hosted": [
+     0,
+     0
+    ],
+    "blocking": [
+     0,
+     0
+    ],
+    "querylog": [
+     0,
+     0
+    ]
+   },
+   "error": "internal RAM: the services need 1005 KB, the board has 96 KB for them"
+  }
+ },
+ {
+  "name": "ws-s3-eth with a query log too big for what its PSRAM has left",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 512,
+    "fwd_pending": 32
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 512,
+    "fwd_pending": 32
+   },
+   "fits": false,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    7727415
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     786432
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     524288
+    ]
+   },
+   "error": "PSRAM: the services need 7547 KB, the board has 7168 KB for them"
+  }
+ },
+ {
+  "name": "the same with the query log off",
+  "image": "esp32s3-octal",
+  "chip_psram_kb": 8192,
+  "board": {
+   "name": "ws-s3-eth",
+   "title": "Waveshare ESP32-S3-ETH",
+   "image": "esp32s3-octal",
+   "flash_mb": 16,
+   "psram_mb": 8,
+   "tier": "tested",
+   "spi": [
+    {
+     "host": 2,
+     "sclk": 13,
+     "mosi": 11,
+     "miso": 12
+    },
+    {
+     "host": 3,
+     "sclk": 7,
+     "mosi": 6,
+     "miso": 5
+    }
+   ],
+   "ethernet": {
+    "kind": "w5500",
+    "spi_host": 2,
+    "cs": 14,
+    "int": 10,
+    "rst": 9,
+    "mhz": 20
+   },
+   "sd": {
+    "kind": "spi",
+    "spi_host": 3,
+    "cs": 4
+   },
+   "led": {
+    "kind": "ws2812",
+    "pin": 21
+   },
+   "memory": {
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 512,
+    "fwd_pending": 32
+   },
+   "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 8192,
+    "internal_kb": 160,
+    "cache_kb": 2944,
+    "cache_entries": 8192,
+    "blocklist_kb": 2048,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 256,
+    "secondary_zones_kb": 256,
+    "querylog_kb": 512,
+    "fwd_pending": 32
+   },
+   "fits": true,
+   "capacity": [
+    163840,
+    7340032
+   ],
+   "total": [
+    118784,
+    7203127
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     3922233
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     393214
+    ],
+    "hosted": [
+     8192,
+     786432
+    ],
+    "blocking": [
+     8192,
+     2101248
+    ],
+    "querylog": [
+     0,
+     0
+    ]
+   },
+   "error": ""
+  }
+ },
+ {
+  "name": "a board without PSRAM: no query log",
+  "image": "esp32c3",
+  "chip_psram_kb": 0,
+  "board": {
+   "name": "x",
+   "image": "esp32c3",
+   "psram_mb": 0
+  },
+  "services": [
+   "dns",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 0,
+    "internal_kb": 128,
+    "cache_kb": 64,
+    "cache_entries": 512,
+    "blocklist_kb": 128,
+    "blocklist_index_kb": 0,
+    "hosted_zones_kb": 64,
+    "secondary_zones_kb": 64,
+    "querylog_kb": 0,
+    "fwd_pending": 8
+   },
+   "fits": false,
+   "capacity": [
+    131072,
+    0
+   ],
+   "total": [
+    1028921,
+    0
+   ],
+   "shares": {
+    "dns": [
+     1028921,
+     0
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     0,
+     0
+    ],
+    "hosted": [
+     0,
+     0
+    ],
+    "blocking": [
+     0,
+     0
+    ],
+    "querylog": [
+     0,
+     0
+    ]
+   },
+   "error": "internal RAM: the services need 1005 KB, the board has 128 KB for them"
+  }
+ },
+ {
+  "name": "a P4 with a bigger table of upstream queries",
+  "image": "esp32p4-rev1",
+  "chip_psram_kb": 32768,
+  "board": {
+   "name": "p4-ip101",
+   "title": "Guition JC-ESP32P4-M3-DEV",
+   "image": "esp32p4-rev1",
+   "flash_mb": 16,
+   "psram_mb": 32,
+   "tier": "tested",
+   "ethernet": {
+    "kind": "emac",
+    "phy": "ip101",
+    "addr": 1,
+    "reset": 51
+   },
+   "sd": {
+    "kind": "sdmmc",
+    "slot": 0,
+    "width": 4,
+    "ldo": 4
+   },
+   "led": {
+    "kind": "none"
+   },
+   "memory": {
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 256
+   },
+   "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+  },
+  "services": [
+   "dns",
+   "forwarding",
+   "forward_zones",
+   "secondary",
+   "hosted",
+   "blocking",
+   "querylog"
+  ],
+  "want": {
+   "board": {
+    "psram_kb": 32768,
+    "internal_kb": 320,
+    "cache_kb": 4096,
+    "cache_entries": 8192,
+    "blocklist_kb": 20480,
+    "blocklist_index_kb": 160,
+    "hosted_zones_kb": 1024,
+    "secondary_zones_kb": 1024,
+    "querylog_kb": 1024,
+    "fwd_pending": 256
+   },
+   "fits": true,
+   "capacity": [
+    327680,
+    32505856
+   ],
+   "total": [
+    282624,
+    31809847
+   ],
+   "shares": {
+    "dns": [
+     94208,
+     5460281
+    ],
+    "forwarding": [
+     0,
+     0
+    ],
+    "forward_zones": [
+     0,
+     0
+    ],
+    "secondary": [
+     8192,
+     1179646
+    ],
+    "hosted": [
+     8192,
+     3145728
+    ],
+    "blocking": [
+     172032,
+     20975616
+    ],
+    "querylog": [
+     0,
+     1048576
+    ]
+   },
+   "error": ""
+  }
+ }
+]

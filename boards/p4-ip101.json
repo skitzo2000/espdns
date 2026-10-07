@@ -1,0 +1,15 @@
+{
+  "name": "p4-ip101",
+  "title": "Guition JC-ESP32P4-M3-DEV",
+  "image": "esp32p4-rev1",
+  "flash_mb": 16,
+  "psram_mb": 32,
+  "tier": "tested",
+  "ethernet": { "kind": "emac", "phy": "ip101", "addr": 1, "reset": 51 },
+  "sd": { "kind": "sdmmc", "slot": 0, "width": 4, "ldo": 4 },
+  "led": { "kind": "none" },
+  "memory": { "internal_kb": 320, "cache_kb": 4096, "cache_entries": 8192, "blocklist_kb": 20480,
+              "blocklist_index_kb": 160, "hosted_zones_kb": 1024, "secondary_zones_kb": 1024,
+              "querylog_kb": 1024, "fwd_pending": 32 },
+  "notes": "ESP32-P4 silicon v1.3. IDF's P4 EMAC defaults match the board (MDC 31, MDIO 52, REF_CLK in on GPIO50). SD IO bank powered by on-chip LDO channel 4. No LED the firmware can drive: use an add-on LED."
+}

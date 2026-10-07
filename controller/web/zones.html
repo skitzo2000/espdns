@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS zones</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Zones</h1>
+  <p class="lead">The hosted zones, each a master file in <code>zones/</code>: edit, check and save, then push.</p>
+  <div class="cfgs">
+    <div class="cfgside">
+      <div class="card boardlist" id="list"><div class="empty">Loading zones…</div></div>
+      <form class="card newcfg" id="new" autocomplete="off">
+        <label>New zone <input id="newname" placeholder="home.example" spellcheck="false" autocapitalize="off"></label>
+        <span class="sub">From a template: its SOA, and an NS for each node in settings.json.</span>
+        <button class="btn small" type="submit">Create</button>
+      </form>
+      <div class="card newcfg" id="nodesbox" hidden></div>
+      <div class="card newcfg" id="deleted" hidden></div>
+    </div>
+    <div class="card detail cfgmain" id="main"><div class="empty">Choose a zone.</div></div>
+  </div>
+</main>
+<script type="module" src="zones.js"></script>
+</body>
+</html>

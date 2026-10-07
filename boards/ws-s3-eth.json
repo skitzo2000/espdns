@@ -1,0 +1,19 @@
+{
+  "name": "ws-s3-eth",
+  "title": "Waveshare ESP32-S3-ETH",
+  "image": "esp32s3-octal",
+  "flash_mb": 16,
+  "psram_mb": 8,
+  "tier": "tested",
+  "spi": [
+    { "host": 2, "sclk": 13, "mosi": 11, "miso": 12 },
+    { "host": 3, "sclk": 7, "mosi": 6, "miso": 5 }
+  ],
+  "ethernet": { "kind": "w5500", "spi_host": 2, "cs": 14, "int": 10, "rst": 9, "mhz": 20 },
+  "sd": { "kind": "spi", "spi_host": 3, "cs": 4 },
+  "led": { "kind": "ws2812", "pin": 21 },
+  "memory": { "internal_kb": 160, "cache_kb": 2944, "cache_entries": 8192, "blocklist_kb": 2048,
+              "blocklist_index_kb": 0, "hosted_zones_kb": 256, "secondary_zones_kb": 256,
+              "querylog_kb": 64, "fwd_pending": 32 },
+  "notes": "Optional PoE module (802.3af). W5500 pins go through the GPIO matrix, so the SPI clock stays at 20 MHz."
+}

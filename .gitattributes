@@ -1,0 +1,15 @@
+# Internal working documents: kept in this repository, left out of the public export
+# (`git archive`, which honours export-ignore). docs/architecture.md replaces design.md
+# publicly. scripts/export-check.sh checks the exported tree.
+docs/plan.md               export-ignore
+docs/design.md             export-ignore
+docs/design-review.html    export-ignore
+docs/rollout.md            export-ignore
+# The developers' notes for the controller and the firmware (make targets, the reference
+# site). docs/ is the public documentation; a public developer guide comes later.
+controller/README.md       export-ignore
+firmware/README.md         export-ignore
+
+# FreeCAD's automatic backup of the enclosure model, not a source file.
+*.FCBak                    export-ignore
+

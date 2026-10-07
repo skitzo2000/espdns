@@ -1,0 +1,5 @@
+# The repository's top is the controller image's "version" build context (controller/compose.yaml,
+# controller/Dockerfile), for the VERSION file alone: an allowlist, so nothing else, no data
+# directory, key or local file, gets into a build.
+*
+!VERSION

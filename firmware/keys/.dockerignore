@@ -1,0 +1,5 @@
+# firmware/keys is the controller image's "keys" build context (controller/Dockerfile,
+# controller/compose.yaml), for the public keys alone: an allowlist, so nothing else gets in.
+*
+!release.pub
+!recovery.pub

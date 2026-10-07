@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS push</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Push</h1>
+  <p class="lead">Firmware, configs, a list or the hosted zones, one node at a time: a dry run first, then the push.</p>
+  <div id="banner"></div>
+
+  <div class="pushgrid" id="form" hidden>
+    <section class="card pushsec">
+      <h2>1. What</h2>
+      <div class="seg" role="radiogroup" aria-label="What to push" id="kinds"></div>
+      <div id="what"></div>
+    </section>
+
+    <section class="card pushsec">
+      <h2>2. Nodes</h2>
+      <p class="sub">The nodes in <code>settings.json</code>, changed in this order after the canary. Peers
+        that count for the rule: the other nodes there<span id="peers"></span>.</p>
+      <div class="scroll"><table class="pnodes">
+        <thead><tr><th></th><th>Node</th><th class="wide">Board · chip image</th><th>Runs</th><th>State</th><th>Order</th></tr></thead>
+        <tbody id="nodes"></tbody>
+      </table></div>
+      <div class="opts">
+        <label>Canary <select id="canary"></select></label>
+        <label>Soak <span class="row"><input id="soak" type="number" min="60" step="30" inputmode="numeric"> s</span></label>
+        <label>Names it must block <input id="blocked" placeholder="doubleclick.net" spellcheck="false" autocomplete="off"></label>
+        <label>Names that must resolve <select id="must"></select></label>
+      </div>
+      <p class="sub" id="optnote"></p>
+    </section>
+
+    <section class="card pushsec wide2">
+      <h2>3. Order and what each node gets</h2>
+      <p class="order" id="order"></p>
+      <div id="preview" class="previews"></div>
+      <div class="acts pushacts">
+        <button class="btn" id="dry">Dry run</button>
+        <button class="btn primary" id="go" disabled>Roll out</button>
+        <span class="sub" id="gonote"></span>
+      </div>
+    </section>
+  </div>
+
+  <section class="card job pushrun" id="run" hidden>
+    <div class="row">
+      <h2 id="run-title"></h2>
+      <span id="run-state" class="pill"></span>
+      <button class="btn" id="stop" hidden>Stop</button>
+    </div>
+    <div class="sub" id="run-sub"></div>
+    <ul class="hints sub" id="run-plan" aria-label="How it goes" hidden></ul>
+    <div class="scroll"><table class="prun">
+      <thead><tr><th>#</th><th>Node</th><th>State</th><th>What</th><th>DNS checks</th></tr></thead>
+      <tbody id="run-nodes"></tbody>
+    </table></div>
+    <div id="run-outcome"></div>
+    <details id="run-logwrap" open><summary>Log</summary><pre id="log"></pre></details>
+  </section>
+</main>
+<script type="module" src="push.js"></script>
+</body>
+</html>

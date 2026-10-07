@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS system</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>System</h1>
+  <p class="lead">The controller itself: its tools, keys and login, and the zone primary.</p>
+
+  <section class="card syslinks" aria-label="Tools">
+    <a href="jobs.html"><strong>Job history</strong><span class="sub">Every job and the action log; check the fleet.</span></a>
+    <a href="push.html"><strong>Push</strong><span class="sub">Firmware, configs, lists or zones, one node at a time.</span></a>
+    <a href="configs.html"><strong>Configs</strong><span class="sub">Each node's config file: check, save, push.</span></a>
+    <a href="adopt.html"><strong>Adopt</strong><span class="sub">A found node gets its config and static address.</span></a>
+    <a href="builder.html"><strong>Builder</strong><span class="sub">The board catalogue; install a new board over USB.</span></a>
+    <a href="backup.html"><strong>Backup</strong><span class="sub">The data directory in one encrypted file.</span></a>
+  </section>
+
+  <h2 class="dsec">Keys and login</h2>
+  <section class="card sysbox"><table class="facts" id="keys"><tr><td class="sub">Reading…</td></tr></table>
+    <p class="sub">Settings are <code>settings.json</code> in the data directory (controller/README.md).</p></section>
+
+  <h2 class="dsec">Zone primary</h2>
+  <div class="acts"><button class="btn small" type="button" id="primary-refresh">Read again</button><span class="sub" id="primary-sub"></span></div>
+  <div id="primary" class="sects one"><div class="sub">Reading…</div></div>
+</main>
+<script type="module" src="system.js"></script>
+</body>
+</html>

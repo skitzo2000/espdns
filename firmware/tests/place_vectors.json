@@ -1,0 +1,632 @@
+[
+ {
+  "name": "the real list on ws-s3-eth: fits no tier",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 2097152,
+   "used": 0,
+   "held": 0,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "list too big for this board's blocking memory (memory.blocklist_kb)",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "",
+   "now": false,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "the real list on ws-s3-eth over a list in the SD tier",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 2097152,
+   "used": 1228800,
+   "held": 1228800,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "list too big for this board's blocking memory (memory.blocklist_kb)",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "",
+   "now": false,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "the real list on p4-ip101, nothing loaded",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "the real list on p4-ip101 over itself",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 20971520,
+   "used": 8058880,
+   "held": 8058880,
+   "index_budget": 163840,
+   "index_used": 125920,
+   "index_held": 125920,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "the real list on p4-ip101 over itself, counted all in the lists' memory",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 20971520,
+   "used": 8184800,
+   "held": 8184800,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "the real list on p4-ip101 over a 14 MB list: at the next reboot",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 20971520,
+   "used": 14680064,
+   "held": 14680064,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "ram",
+   "now": false,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "the real list on p4-ip101 with 13 MB of overrides: the SD tier",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 20971520,
+   "used": 13631488,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "sd",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "the real list on p4-ip101 with 17 MB of overrides: refused",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 20971520,
+   "used": 17825792,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "list too big for this board's blocking memory (memory.blocklist_kb)",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "",
+   "now": false,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "the real list on a P4 with 8 MB for blocking",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 8388608,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "the real list on a P4 with 4 MB for blocking",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000006343000087000000a000000000e83e00d8040000ac1b0000ea2eaba4f166a09cd9652700f53c0000a06c000000f63f00485402003e271000ea2eaba4f166a09c000000000000000078e73e0000e0b90000000000000000000000000000000000000000000000000078e73e0000e0b90000000000000000000000000000000000",
+  "file_len": 12181504,
+  "room": {
+   "budget": 4194304,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4122624,
+    "index": 125920,
+    "sectors": 8058880,
+    "entries": 2599228
+   },
+   "tier": "sd",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "an SD-tier list on ws-s3-eth, nothing loaded",
+  "header": "455350444e53424c022c0a00000000000000000000000000000000000000000060e31600401f0000a00000000000100000000000000000000000000000000000a086010090010000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 5349376,
+  "room": {
+   "budget": 2097152,
+   "used": 0,
+   "held": 0,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 1048576,
+    "index": 67200,
+    "sectors": 4300800,
+    "entries": 1600000
+   },
+   "tier": "sd",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "an SD-tier list on ws-s3-eth over another: at the next reboot",
+  "header": "455350444e53424c022c0a00000000000000000000000000000000000000000060e31600401f0000a00000000000100000000000000000000000000000000000a086010090010000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 5349376,
+  "room": {
+   "budget": 2097152,
+   "used": 1536000,
+   "held": 1536000,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 1048576,
+    "index": 67200,
+    "sectors": 4300800,
+    "entries": 1600000
+   },
+   "tier": "sd",
+   "now": false,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "a small list on ws-s3-eth over another: live",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000003075000064000000a00000000000010000000000000000000000000000000000d00700000a000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 188416,
+  "room": {
+   "budget": 2097152,
+   "used": 307200,
+   "held": 307200,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 65536,
+    "index": 880,
+    "sectors": 122880,
+    "entries": 32000
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "a small list without PSRAM: the SD tier",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000003075000064000000a00000000000010000000000000000000000000000000000d00700000a000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 188416,
+  "room": {
+   "budget": 131072,
+   "used": 0,
+   "held": 0,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": false,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 65536,
+    "index": 880,
+    "sectors": 122880,
+    "entries": 32000
+   },
+   "tier": "sd",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "a list too big for a board without PSRAM",
+  "header": "455350444e53424c022c0a00000000000000000000000000000000000000000060e31600401f0000a00000000000100000000000000000000000000000000000a086010090010000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 5349376,
+  "room": {
+   "budget": 131072,
+   "used": 0,
+   "held": 0,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": false,
+   "overrides": false
+  },
+  "want": {
+   "error": "list too big for this board's blocking memory (memory.blocklist_kb)",
+   "need": {
+    "front": 1048576,
+    "index": 67200,
+    "sectors": 4300800,
+    "entries": 1600000
+   },
+   "tier": "",
+   "now": false,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "a version 1 list",
+  "header": "455350444e53424c012c0a000000000000000000000000000000000000000000e80300000a000000a000000000100000000000000000000000000000000000003200000002000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 10240,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4096,
+    "index": 96,
+    "sectors": 6144,
+    "entries": 1050
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "an empty list (no index)",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000000000000000000000a00000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 4096,
+  "room": {
+   "budget": 2097152,
+   "used": 0,
+   "held": 0,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 4096,
+    "index": 0,
+    "sectors": 0,
+    "entries": 0
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "overrides next to the real list on p4-ip101",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000003075000064000000a00000000000010000000000000000000000000000000000d00700000a000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 188416,
+  "room": {
+   "budget": 20971520,
+   "used": 8058880,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 125920,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": true
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 65536,
+    "index": 880,
+    "sectors": 122880,
+    "entries": 32000
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": true
+  }
+ },
+ {
+  "name": "overrides over overrides, next to a list in the SD tier on ws-s3-eth",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000003075000064000000a00000000000010000000000000000000000000000000000d00700000a000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 188416,
+  "room": {
+   "budget": 2097152,
+   "used": 1843200,
+   "held": 153600,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": true
+  },
+  "want": {
+   "error": "",
+   "need": {
+    "front": 65536,
+    "index": 880,
+    "sectors": 122880,
+    "entries": 32000
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "overrides that don't fit next to the list",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000003075000064000000a00000000000010000000000000000000000000000000000d00700000a000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 188416,
+  "room": {
+   "budget": 2097152,
+   "used": 1996800,
+   "held": 0,
+   "index_budget": 0,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": true
+  },
+  "want": {
+   "error": "overrides too big for this board's blocking memory (memory.blocklist_kb)",
+   "need": {
+    "front": 65536,
+    "index": 880,
+    "sectors": 122880,
+    "entries": 32000
+   },
+   "tier": "ram",
+   "now": true,
+   "index_internal": false
+  }
+ },
+ {
+  "name": "not a blocklist",
+  "header": "455350444e535858022c0a0000000000000000000000000000000000000000000100000001000000a00000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 8192,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "not a blocklist"
+  }
+ },
+ {
+  "name": "an unknown version",
+  "header": "455350444e53424c032c0a0000000000000000000000000000000000000000000100000001000000a00000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 8192,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "not a blocklist"
+  }
+ },
+ {
+  "name": "a front past the end",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000000100000001000000a00000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 4096,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "list cut short"
+  }
+ },
+ {
+  "name": "a front inside the header",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000000100000001000000a00000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 4096,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "not a blocklist"
+  }
+ },
+ {
+  "name": "a table bigger than the file",
+  "header": "455350444e53424c022c0a0000000000000000000000000000000000000000000100000064000000a00000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "file_len": 8192,
+  "room": {
+   "budget": 20971520,
+   "used": 0,
+   "held": 0,
+   "index_budget": 163840,
+   "index_used": 0,
+   "index_held": 0,
+   "ram_tier": true,
+   "overrides": false
+  },
+  "want": {
+   "error": "bad table size"
+  }
+ }
+]

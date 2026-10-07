@@ -1,0 +1,2 @@
+# ESP32-C6: single core, no PSRAM, Wi-Fi 6 (2.4 GHz). Wi-Fi or a W5500.
+CONFIG_IDF_TARGET="esp32c6"

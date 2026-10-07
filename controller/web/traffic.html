@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS traffic</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Traffic</h1>
+  <nav class="tabs" aria-label="Traffic"><a href="traffic.html" aria-current="page">Charts</a><a href="querylog.html">Query log</a></nav>
+  <p class="lead">The fleet's queries over the last hour, from each node's metrics.</p>
+  <div class="kpis" id="kpis"><div class="card empty">Reading the nodes…</div></div>
+  <h2 class="dsec">The last hour</h2>
+  <div class="charts" id="charts"></div>
+  <h2 class="dsec">By node</h2>
+  <div class="tiles" id="tiles"></div>
+  <h2 class="dsec">Top names</h2>
+  <div class="tops" id="tops"></div>
+  <p class="note" id="updated"></p>
+</main>
+<script type="module" src="traffic.js"></script>
+</body>
+</html>

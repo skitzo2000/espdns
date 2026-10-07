@@ -1,0 +1,104 @@
+# HELP espdns_zone_serial Each zone's SOA serial.
+# TYPE espdns_zone_serial gauge
+espdns_zone_serial{zone="a\"b\\c\nd",kind="hosted"} 2026100401
+espdns_up 1
+espdns_wifi_rssi_dbm -61
+espdns_uptime_seconds 3723.004005
+# HELP espdns_query_duration_seconds Time to answer.
+# TYPE espdns_query_duration_seconds histogram
+espdns_query_duration_seconds_bucket{le="0.0001"} 0
+espdns_query_duration_seconds_bucket{le="0.00025"} 0
+espdns_query_duration_seconds_bucket{le="0.0005"} 0
+espdns_query_duration_seconds_bucket{le="0.001"} 1
+espdns_query_duration_seconds_bucket{le="0.0025"} 1
+espdns_query_duration_seconds_bucket{le="0.005"} 1
+espdns_query_duration_seconds_bucket{le="0.01"} 1
+espdns_query_duration_seconds_bucket{le="0.025"} 1
+espdns_query_duration_seconds_bucket{le="0.05"} 1
+espdns_query_duration_seconds_bucket{le="0.1"} 1
+espdns_query_duration_seconds_bucket{le="0.25"} 1
+espdns_query_duration_seconds_bucket{le="0.5"} 1
+espdns_query_duration_seconds_bucket{le="1"} 1
+espdns_query_duration_seconds_bucket{le="2.5"} 2
+espdns_query_duration_seconds_bucket{le="+Inf"} 2
+espdns_query_duration_seconds_sum 1.200700
+espdns_query_duration_seconds_count 2
+# HELP espdns_upstream_queries_total Attempts at each forwarder (each server tried, each retry).
+# TYPE espdns_upstream_queries_total counter
+espdns_upstream_queries_total{upstream="192.0.2.1"} 3
+espdns_upstream_queries_total{upstream="192.0.2.2"} 1
+# HELP espdns_upstream_failures_total Attempts at each forwarder that got no answer, or SERVFAIL.
+# TYPE espdns_upstream_failures_total counter
+espdns_upstream_failures_total{upstream="192.0.2.1"} 1
+espdns_upstream_failures_total{upstream="192.0.2.2"} 1
+# HELP espdns_upstream_timeouts_total Attempts at each forwarder with no answer within the try's timeout (upstream_timeout_ms): of its failures.
+# TYPE espdns_upstream_timeouts_total counter
+espdns_upstream_timeouts_total{upstream="192.0.2.1"} 1
+espdns_upstream_timeouts_total{upstream="192.0.2.2"} 0
+# HELP espdns_upstream_duration_seconds Time each forwarder took to answer.
+# TYPE espdns_upstream_duration_seconds histogram
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.0001"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.00025"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.0005"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.001"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.0025"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.005"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.01"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.025"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.05"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.1"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.25"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="0.5"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="1"} 1
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="2.5"} 2
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.1",le="+Inf"} 2
+espdns_upstream_duration_seconds_sum{upstream="192.0.2.1"} 1.200700
+espdns_upstream_duration_seconds_count{upstream="192.0.2.1"} 2
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.0001"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.00025"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.0005"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.001"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.0025"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.005"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.01"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.025"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.05"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.1"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.25"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="0.5"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="1"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="2.5"} 0
+espdns_upstream_duration_seconds_bucket{upstream="192.0.2.2",le="+Inf"} 0
+espdns_upstream_duration_seconds_sum{upstream="192.0.2.2"} 0.000000
+espdns_upstream_duration_seconds_count{upstream="192.0.2.2"} 0
+# HELP espdns_fwd_slots Upstream queries the node may have outstanding at once (memory.fwd_pending).
+# TYPE espdns_fwd_slots gauge
+espdns_fwd_slots 32
+# HELP espdns_fwd_group_cap The most of them one group may hold: the default forwarders, a forward zone, and the forward zones together.
+# TYPE espdns_fwd_group_cap gauge
+espdns_fwd_group_cap 16
+# HELP espdns_fwd_inflight Upstream queries outstanding now: to the default forwarders, and to the forward zones together.
+# TYPE espdns_fwd_inflight gauge
+espdns_fwd_inflight{group="default"} 4
+espdns_fwd_inflight{group="zones"} 3
+# HELP espdns_fwd_inflight_peak The most upstream queries outstanding at once since boot.
+# TYPE espdns_fwd_inflight_peak gauge
+espdns_fwd_inflight_peak 17
+# HELP espdns_fwd_zone_inflight Upstream queries outstanding now, per forward zone.
+# TYPE espdns_fwd_zone_inflight gauge
+espdns_fwd_zone_inflight{zone="corp.example.com"} 1
+espdns_fwd_zone_inflight{zone="lab.example.net"} 2
+# HELP espdns_fwd_shed_total Queries answered SERVFAIL at once: their group, or the table, was at its cap.
+# TYPE espdns_fwd_shed_total counter
+espdns_fwd_shed_total{group="default"} 4
+espdns_fwd_shed_total{group="zones"} 1
+# HELP espdns_fwd_expired_total Upstream queries that ended with no answer: every try, or the budget, spent.
+# TYPE espdns_fwd_expired_total counter
+espdns_fwd_expired_total{group="default"} 2
+espdns_fwd_expired_total{group="zones"} 0
+# HELP espdns_fwd_tcp_retries_total Truncated answers asked again over TCP.
+# TYPE espdns_fwd_tcp_retries_total counter
+espdns_fwd_tcp_retries_total 6
+# HELP espdns_fwd_select_errors_total Times the forward loop's select() failed (it waits, longer each time in a row).
+# TYPE espdns_fwd_select_errors_total counter
+espdns_fwd_select_errors_total 1

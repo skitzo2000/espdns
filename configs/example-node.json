@@ -1,0 +1,18 @@
+{
+  "name": "node1",
+  "network": { "address": "192.0.2.53/24", "gateway": "192.0.2.1" },
+  "forwarders": [ "9.9.9.9", "149.112.112.112" ],
+  "upstream_timeout_ms": 1500,
+  "forward_zones": [
+    { "zone": "_acme-challenge.example.com", "forwarder": "198.51.100.53" },
+    { "zone": "partner.example", "forwarder": "198.51.100.54" }
+  ],
+  "secondary": {
+    "primary": "192.0.2.254",
+    "zones": [ "example.com", "home.example" ],
+    "soa_poll_s": 60,
+    "retry_s": 30
+  },
+  "time": { "tz": "UTC0", "ntp": [ "pool.ntp.org" ] },
+  "blocking": { "answer": "null", "ttl": 10 }
+}

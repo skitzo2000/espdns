@@ -1,0 +1,17 @@
+{
+  "name": "xiao-s3-sense",
+  "title": "Seeed XIAO ESP32S3 Sense",
+  "image": "esp32s3-octal",
+  "flash_mb": 8,
+  "psram_mb": 8,
+  "tier": "tested",
+  "spi": [{ "host": 2, "sclk": 7, "mosi": 9, "miso": 8 }],
+  "ethernet": { "kind": "w5500", "spi_host": 2, "cs": 1, "int": 2, "rst": 4, "mhz": 20, "optional": true },
+  "sd": { "kind": "spi", "spi_host": 2, "cs": 21 },
+  "led": { "kind": "none" },
+  "wifi": { "tx_power_dbm": 15 },
+  "memory": { "internal_kb": 160, "cache_kb": 2944, "cache_entries": 8192, "blocklist_kb": 2048,
+              "blocklist_index_kb": 0, "hosted_zones_kb": 256, "secondary_zones_kb": 256,
+              "querylog_kb": 64, "fwd_pending": 32 },
+  "notes": "Wi-Fi as it ships; wired with a W5500 module on the SD card's bus: CS D0 (GPIO1), INT D1 (GPIO2), RST D3 (GPIO4). The user LED shares GPIO21 with the SD card's chip select: use an add-on LED. At 20 dBm transmit, packets were lost and the access point dropped it for low ACK; 15 dBm measured clean."
+}

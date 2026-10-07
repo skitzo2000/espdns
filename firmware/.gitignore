@@ -1,0 +1,17 @@
+build/
+sdkconfig
+sdkconfig.old
+managed_components/
+secrets/
+build-rollback/
+tests/test_core
+tests/tls/
+__pycache__/
+dist/
+tests/bench_blocklist
+/local.mk
+/site-defaults.h
+tests/test_defaults
+tests/test_observe
+tests/test_http
+tests/test_zones

@@ -1,0 +1,66 @@
+# Shared by every chip image; images/<image>/sdkconfig.defaults adds the chip and PSRAM.
+# Everything about a board (pins, Ethernet, SD, LED) is data read at boot, not built in.
+
+# Logs and Improv on the native USB port where the chip has one (/dev/ttyACM0); the
+# classic ESP32 has none and uses UART0.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+
+CONFIG_FATFS_LFN_HEAP=y
+
+# Every Ethernet driver the chip can use: the built-in MAC's PHYs are always in; the SPI
+# chips are opt-in.
+CONFIG_ETH_USE_SPI_ETHERNET=y
+CONFIG_ETH_SPI_ETHERNET_W5500=y
+
+# Flash parts seen on supported boards
+CONFIG_SPI_FLASH_SUPPORT_BOYA_CHIP=y
+
+# Sockets: the DNS listeners (2) and up to 6 TCP clients, one per outstanding upstream query
+# (memory.fwd_pending: 32 with PSRAM, 8 without; each its own random source port, forward.h),
+# the forward loop's wake pair and TCP retry (3), zone transfers and SOA checks (2) and the
+# HTTP server (5): 50 if every one of them peaked at once, and the table only fills up when
+# the default forwarders and the forward zones both hold their half of it. Past the limit an
+# upstream query fails at once (SERVFAIL), as one past the table's caps does. At most 53:
+# lwIP's sockets take the top of FD_SETSIZE (64, for select()), and stdio's 3 and the SD
+# card's 8 files need the descriptors below them (board.c checks it). An open one takes about
+# half a KB of internal RAM, from the system's part (memplan.h).
+CONFIG_LWIP_MAX_SOCKETS=48
+CONFIG_LWIP_UDP_RECVMBOX_SIZE=64
+CONFIG_LWIP_TCP_ACCEPTMBOX_SIZE=8
+CONFIG_FREERTOS_HZ=1000
+
+# Clock (clock.c): up to 3 SNTP servers from the config; without them, the NTP server the
+# DHCP lease names (asked for here), else the gateway, else pool.ntp.org: three slots.
+CONFIG_LWIP_SNTP_MAX_SERVERS=3
+CONFIG_LWIP_DHCP_GET_NTP_SRV=y
+
+# Two OTA slots + rollback: a new image must confirm itself or the bootloader reverts.
+# Built against the 8 MB layout; a 4 MB board's factory image gets partitions-4mb.csv
+# instead (tools/factory.py), since the app doesn't depend on the slot size.
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions-8mb.csv"
+CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE=y
+
+# Optimized for speed (-O2), not ESP-IDF's debug default (-Og): the blocklist lookup ran
+# 1.6x faster at -O2 on the P4. The bootloader keeps its own (size) setting.
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+
+# The task watchdog (supervisor.c) watches only the supervisor, which watches every service
+# task (sup.h): a supervisor that stops for 10 s resets the chip, which counts as a stall
+# reboot. The idle tasks are not watched: queries keeping both cores busy are no reason to
+# reboot a node that is answering them.
+CONFIG_ESP_TASK_WDT_PANIC=y
+CONFIG_ESP_TASK_WDT_TIMEOUT_S=10
+CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0=n
+CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1=n
+
+# Idle clock scaling (pm.c, cpuplan.h; docs/design.md, Node OS): ESP-IDF power management,
+# configured once the listeners are open from the board's and the node config's settings, so
+# boot runs at the full clock. Frequency scaling only: no automatic light sleep (it would drop
+# the Ethernet link or the Wi-Fi association), so no tickless idle and nothing kept for a
+# powered-down CPU.
+CONFIG_PM_ENABLE=y
+CONFIG_PM_DFS_INIT_AUTO=n
+CONFIG_FREERTOS_USE_TICKLESS_IDLE=n
+CONFIG_PM_POWER_DOWN_CPU_IN_LIGHT_SLEEP=n

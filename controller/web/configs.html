@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>espDNS configs</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Configs</h1>
+  <p class="lead">Each node's config, a file in <code>configs/</code>: check, save and push it.</p>
+  <div class="cfgs">
+    <div class="cfgside">
+      <div class="card boardlist" id="list"><div class="empty">Loading configs…</div></div>
+      <form class="card newcfg" id="new" autocomplete="off">
+        <label>New config <input id="newname" placeholder="dns4.json" spellcheck="false" pattern="[a-z0-9][a-z0-9._\-]*\.json"></label>
+        <label class="inline"><input type="checkbox" id="newcopy" checked> a copy of the one open</label>
+        <button class="btn small" type="submit">Create</button>
+      </form>
+    </div>
+    <div class="card detail cfgmain" id="main"><div class="empty">Choose a config.</div></div>
+  </div>
+</main>
+<script type="module" src="configs.js"></script>
+</body>
+</html>
