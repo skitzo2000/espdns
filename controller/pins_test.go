@@ -59,19 +59,73 @@ func TestDockerfileImagesPinned(t *testing.T) {
 	}
 }
 
-// Every workflow: CI on every push, the release on a version tag
+// Every workflow: CI on every push, the release on a version tag. GitHub's (.github/) are
+// the public repository's; a private forge's (.gitea/, left out of the public export) are
+// checked the same way when they are there.
 func TestWorkflowPinned(t *testing.T) {
-	files, err := filepath.Glob("../.gitea/workflows/*.yml")
+	files, err := filepath.Glob("../.github/workflows/*.yml")
 	if err != nil || len(files) < 2 {
-		t.Fatalf("workflows: %v %v", files, err)
+		t.Fatalf(".github workflows: %v %v", files, err)
 	}
-	for _, f := range files {
+	gitea, err := filepath.Glob("../.gitea/workflows/*.yml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, f := range append(files, gitea...) {
 		workflowPinned(t, f)
 	}
 }
 
+// Where both are there, the two forges' workflows are the same build: the same container
+// images, the same jobs and the same build matrix, so neither drifts from the other.
+func TestWorkflowsAgree(t *testing.T) {
+	for _, name := range []string{"ci.yml", "release.yml"} {
+		gh := read(t, "../.github/workflows/"+name)
+		b, err := os.ReadFile("../.gitea/workflows/" + name)
+		if os.IsNotExist(err) {
+			continue
+		} else if err != nil {
+			t.Fatal(err)
+		}
+		gt := string(b)
+		for _, re := range []*regexp.Regexp{
+			regexp.MustCompile(`(?m)^\s+image:\s*(\S+)`),
+			regexp.MustCompile(`(?m)^ *- (?:image|board): *(\S+)`),
+		} {
+			if a, b := matches(re, gh), matches(re, gt); a != b {
+				t.Errorf("%s: .github has %s, .gitea %s", name, a, b)
+			}
+		}
+		// Every job of the private forge's is in GitHub's (which may add one: the draft)
+		jobs := regexp.MustCompile(`(?m)^  ([a-z][a-z0-9-]*):\n`)
+		_, ghJobs, _ := strings.Cut(gh, "\njobs:\n")
+		_, gtJobs, _ := strings.Cut(gt, "\njobs:\n")
+		have := map[string]bool{}
+		for _, m := range jobs.FindAllStringSubmatch(ghJobs, -1) {
+			have[m[1]] = true
+		}
+		if len(have) == 0 {
+			t.Errorf("%s: no jobs in .github", name)
+		}
+		for _, m := range jobs.FindAllStringSubmatch(gtJobs, -1) {
+			if !have[m[1]] {
+				t.Errorf("%s: job %s in .gitea, not in .github", name, m[1])
+			}
+		}
+	}
+}
+
+func matches(re *regexp.Regexp, s string) string {
+	var out []string
+	for _, m := range re.FindAllStringSubmatch(s, -1) {
+		out = append(out, m[1])
+	}
+	sort.Strings(out)
+	return strings.Join(out, " ")
+}
+
 func workflowPinned(t *testing.T, path string) {
-	name := filepath.Base(path)
+	name := filepath.Base(filepath.Dir(filepath.Dir(path))) + "/" + filepath.Base(path)
 	wf := read(t, path)
 	images := regexp.MustCompile(`(?m)^\s+image:\s*(\S+)`).FindAllStringSubmatch(wf, -1)
 	if len(images) == 0 {

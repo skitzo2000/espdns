@@ -77,7 +77,8 @@ whole checkout. [docs/releasing.md](docs/releasing.md) has the full release buil
 
 ### What CI runs
 
-The CI workflow ([`.gitea/workflows/ci.yml`](.gitea/workflows/ci.yml)) runs on every push:
+The CI workflow ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs on every push
+and every pull request:
 
 - the firmware's host unit tests (with AddressSanitizer and UBSan);
 - the controller's `go vet` and `go test`;

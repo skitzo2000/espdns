@@ -7,15 +7,15 @@ command or git. Nothing needs installing but Docker and git.
 ## What a release holds
 
 CI builds a release's files when a version tag is pushed
-([`.gitea/workflows/release.yml`](../.gitea/workflows/release.yml)) and puts them on the
-forge as a **draft** release, which only the repository's writers see:
+([`.github/workflows/release.yml`](../.github/workflows/release.yml)) and puts them on
+GitHub as a **draft** release, which only the repository's writers see:
 
 | File | What it is |
 | --- | --- |
 | `espdns-<version>-image-<image>.tar.gz` | Each chip image (`firmware/images/*`), exported as the controller's builder imports it: `<image>/` with the bootloader, both partition tables, the OTA data, the app and `image.json` |
 | `espdns-<version>-factory-<board>.bin` | Each catalog board's factory image (`boards/*.json`): one file, written at offset 0 of a new node's flash |
 | `espdns-<version>-factory-<board>.manifest.json` | Its [ESP Web Tools](https://esphome.github.io/esp-web-tools/) manifest, as the builder's: erase, then install that file at offset 0 |
-| `espdns-<version>-controller-image.txt` | The controller's image, pushed to the forge's container registry: `<registry>/<owner>/espdns-controller:<version>@sha256:<digest>` |
+| `espdns-<version>-controller-image.txt` | The controller's image, pushed to the GitHub container registry: `ghcr.io/<owner>/espdns-controller:<version>@sha256:<digest>` |
 | `SHA256SUMS` | The SHA-256 of every file above, as `sha256sum` writes it |
 | `SHA256SUMS.sig` | The release key's signature over `SHA256SUMS`, added by a person (below) |
 
@@ -36,11 +36,16 @@ signs, with the key on standard input.
 
 ## Once: the repository's settings
 
-On the forge, in the repository's settings, Actions:
+There is no secret to set. The workflows use the token GitHub gives each run, and each job
+asks only for what it writes: the release job writes the draft release, the image job writes
+the package. The repository needs only:
 
-- the secret `RELEASE_TOKEN`: an access token that can write the repository (its releases)
-  and its owner's packages (the container registry);
-- the variable `RELEASE_USER`, only if that token is not the tag pusher's: its user.
+- Actions enabled (Settings, Actions, General). The default workflow permissions, read
+  only, are fine: the workflows ask for more themselves.
+- The package public, after the first release. The first release creates the package
+  `espdns-controller` under the repository's owner, and GitHub makes a new package
+  private. On the package's page, Package settings, change its visibility to public, once.
+  Its label links it to the repository.
 
 ## Making a release
 
@@ -202,6 +207,9 @@ docker run --rm -v "$PWD/build/release:/release:ro" --network none \
 
 The scripts the workflow runs are in [`scripts/release/`](../scripts/release/):
 `check-version.sh` (the tag against `VERSION` and `CHANGELOG.md`), `changelog.sh` (a
-version's notes), `build-firmware.sh` (above) and `publish.sh` (the draft release). The
+version's changelog), `notes.sh` (the draft's notes: the changelog and how to check the
+files) and `build-firmware.sh` (above). The workflow makes the draft with GitHub's `gh`.
+`publish.sh` makes the same draft on a Gitea or Forgejo forge, for a copy of the
+repository kept there. The
 release's files are `controller/internal/dist`; its tests and the scripts' run with the
 controller's (`controller/releasescripts_test.go`).

@@ -1,5 +1,6 @@
 #!/bin/sh
-# Puts a release's files on the forge as a draft release (docs/releasing.md):
+# Puts a release's files on a Gitea or Forgejo forge as a draft release (docs/releasing.md;
+# on GitHub, .github/workflows/release.yml makes the draft with gh instead):
 #
 #   publish.sh TAG DIST
 #
@@ -25,13 +26,7 @@ v=$(sh "$here/check-version.sh" "$tag")
 [ -f "$dist/SHA256SUMS" ] || { echo "$dist: no SHA256SUMS: not a release's files (espdns release build)" >&2; exit 1; }
 
 # The notes: the changelog's section, then where to read how to check the files
-notes=$(sh "$here/changelog.sh" "$v")
-notes="$notes
-
----
-
-Every file is listed in SHA256SUMS, signed with the espDNS release key in SHA256SUMS.sig:
-check them before use as docs/releasing.md, Checking a release, says."
+notes=$(sh "$here/notes.sh" "$v")
 
 # JSON string: backslashes, quotes, tabs and carriage returns escaped, lines joined with \n
 # (sed and awk's printf "%s" only, the same in every awk)

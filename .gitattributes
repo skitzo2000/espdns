@@ -9,6 +9,8 @@ docs/rollout.md            export-ignore
 # site). docs/ is the public documentation; a public developer guide comes later.
 controller/README.md       export-ignore
 firmware/README.md         export-ignore
+# The private forge's CI and release workflows: the public repository has .github/workflows/.
+.gitea/                    export-ignore
 
 # FreeCAD's automatic backup of the enclosure model, not a source file.
 *.FCBak                    export-ignore

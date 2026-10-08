@@ -1,8 +1,9 @@
-# Release: on a version tag (v*), a release's files, built from the tagged commit, put on the
-# forge as a draft release (docs/releasing.md):
+# Release: on a version tag (v*), a release's files, built from the tagged commit, put on
+# GitHub as a draft release (docs/releasing.md):
 #
-#   - the controller's image, pushed to the forge's container registry as <owner>/espdns-controller:<version>,
-#     its digest in espdns-<version>-controller-image.txt;
+#   - the controller's image, pushed to the GitHub container registry as
+#     ghcr.io/<owner>/espdns-controller:<version>, its digest in
+#     espdns-<version>-controller-image.txt;
 #   - every chip image (firmware/images/*), generic: no board, address or site defaults built
 #     in, as the controller's builder imports them (espdns-<version>-image-<image>.tar.gz);
 #   - each catalog board's factory image (boards/*.json), one bin written at offset 0, with
@@ -14,9 +15,8 @@
 # SHA256SUMS.sig to the draft and publishes it. The tag must be v<VERSION> and CHANGELOG.md
 # must have that version, or nothing is built.
 #
-# The repository's settings, once: the secret RELEASE_TOKEN, an access token that can write
-# the repository (its releases) and its owner's packages (the container registry); and,
-# if that token isn't the tag pusher's, the variable RELEASE_USER, its user.
+# No secret to set: the jobs use the run's own token (GITHUB_TOKEN), each with only the
+# permissions it needs (the draft release, the image in the registry).
 #
 # Every image and action is pinned by digest or commit, as in ci.yml (controller/pins_test.go).
 name: Release
@@ -32,6 +32,9 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
+# Each job asks for what it writes; none by default
+permissions: {}
+
 defaults:
   run:
     shell: bash
@@ -40,14 +43,13 @@ jobs:
   version:
     name: Tag, VERSION and CHANGELOG
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: golang:1.26.7-bookworm@sha256:e8c859f5632dcfde7b32d2012b4351728f6437930887c2f6a91ea242459e5514  # controller/go.mod go
     outputs:
       version: ${{ steps.check.outputs.version }}
     steps:
-      - name: Node for the actions
-        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
-
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
       - name: The tag is v<VERSION>, with its changelog
@@ -62,8 +64,8 @@ jobs:
 
       - name: Build matrix covers every chip image
         run: |
-          wf=.gitea/workflows/release.yml
-          want=$(ls firmware/images | sort | xargs)
+          wf=.github/workflows/release.yml
+          want=$(find firmware/images -mindepth 1 -maxdepth 1 -printf "%f\n" | sort | xargs)
           have=$(sed -n 's/^ *- image: *\([^ ]*\).*/\1/p' $wf | sort | xargs)
           echo "chip images: $want; built: $have"
           [ "$want" = "$have" ] || { echo "::error::$wf: the firmware matrix must list every firmware/images/*"; exit 1; }
@@ -72,6 +74,8 @@ jobs:
     name: Chip image ${{ matrix.image }}
     needs: version
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: espressif/idf:v5.5.5@sha256:a9231d0697ab8f7517cc072e93b7c83e04907bfbfba80b6440d7dbbf90665cf2  # firmware/Makefile IDF_IMAGE
     strategy:
@@ -86,9 +90,6 @@ jobs:
           - image: esp32s3-octal
           - image: esp32s3-quad
     steps:
-      - name: Node for the actions
-        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
-
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
       - name: Pinned ESP-IDF
@@ -111,7 +112,7 @@ jobs:
           have=$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["version"])' build/release/images/${{ matrix.image }}/image.json)
           [ "$want" = "$have" ] || { echo "::error::the image says version $have, the tag $want"; exit 1; }
 
-      - uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2 (v4)
         with:
           name: chip-${{ matrix.image }}
           path: build/release/images/${{ matrix.image }}/
@@ -124,26 +125,28 @@ jobs:
     name: Controller image
     needs: [version, firmware]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
+      # The source label links the package to this repository on GitHub
       - name: Build and push
         env:
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          RELEASE_USER: ${{ vars.RELEASE_USER || github.actor }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_USER: ${{ github.actor }}
           VERSION: ${{ needs.version.outputs.version }}
         run: |
-          [ -n "$RELEASE_TOKEN" ] || { echo "::error::no RELEASE_TOKEN secret (docs/releasing.md, Once)"; exit 1; }
-          registry=${GITHUB_SERVER_URL#*://}
-          registry=${registry%%/*}
-          ref=$registry/$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr 'A-Z' 'a-z')/espdns-controller:$VERSION
-          printf '%s' "$RELEASE_TOKEN" | docker login "$registry" -u "$RELEASE_USER" --password-stdin
+          registry=ghcr.io
+          ref=$registry/$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')/espdns-controller:$VERSION
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$registry" -u "$REGISTRY_USER" --password-stdin
           trap 'docker logout "$registry" >/dev/null' EXIT
           docker build --pull \
             --build-context boards=boards --build-context version=. --build-context keys=firmware/keys \
             --label org.opencontainers.image.version="$VERSION" \
             --label org.opencontainers.image.revision="$GITHUB_SHA" \
-            --label org.opencontainers.image.source="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --label org.opencontainers.image.source="https://github.com/$GITHUB_REPOSITORY" \
             -t "$ref" controller
           [ "$(docker run --rm --entrypoint /espdns "$ref" version)" = "$VERSION" ] || { echo "::error::the image's espdns is not version $VERSION"; exit 1; }
           docker push "$ref"
@@ -152,7 +155,7 @@ jobs:
           mkdir -p build/release
           echo "$ref@$digest" | tee "build/release/espdns-$VERSION-controller-image.txt"
 
-      - uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2 (v4)
         with:
           name: controller-image
           path: build/release/espdns-${{ needs.version.outputs.version }}-controller-image.txt
@@ -162,15 +165,14 @@ jobs:
     name: Release files and the draft release
     needs: [version, firmware, controller-image]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: golang:1.26.7-bookworm@sha256:e8c859f5632dcfde7b32d2012b4351728f6437930887c2f6a91ea242459e5514  # controller/go.mod go
     steps:
-      - name: Node for the actions
-        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
-
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
-      - uses: actions/download-artifact@ad191675b41f6a5b46da9a048cb6893812da158b  # v3.1.0-node20 (v3)
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0 (v4)
         with:
           path: build/release/artifacts
 
@@ -182,8 +184,8 @@ jobs:
         run: |
           mkdir -p build/release/images
           for d in build/release/artifacts/chip-*; do mv "$d" "build/release/images/${d##*/chip-}"; done
-          want=$(ls firmware/images | sort | xargs)
-          have=$(ls build/release/images | sort | xargs)
+          want=$(find firmware/images -mindepth 1 -maxdepth 1 -printf "%f\n" | sort | xargs)
+          have=$(find build/release/images -mindepth 1 -maxdepth 1 -printf "%f\n" | sort | xargs)
           [ "$want" = "$have" ] || { echo "::error::chip images $have, want $want"; exit 1; }
           cd controller
           CGO_ENABLED=0 go run ./cmd/espdns release build -version "$VERSION" -images ../build/release/images \
@@ -191,15 +193,44 @@ jobs:
             -include "../build/release/artifacts/controller-image/espdns-$VERSION-controller-image.txt"
           cd ../build/release/dist && sha256sum -c SHA256SUMS
 
-      - uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2 (v4)
         with:
           name: release-${{ needs.version.outputs.version }}
           path: build/release/dist/
           retention-days: 30
 
+  # The draft, on the runner itself (gh is there, not in the Go image): the files the job
+  # above built, as it checked them. A draft is seen only by the repository's writers.
+  draft:
+    name: Draft release
+    needs: [version, release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0 (v4)
+        with:
+          name: release-${{ needs.version.outputs.version }}
+          path: build/release/dist
+
+      # Its notes the version's changelog (scripts/release/notes.sh); a 0.x version is a
+      # pre-release. A release already there for the tag, draft or not, is refused, not
+      # changed: delete it first.
       - name: Draft release
         env:
-          FORGE_API: ${{ github.server_url }}/api/v1
-          REPO: ${{ github.repository }}
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        run: sh scripts/release/publish.sh "${GITHUB_REF#refs/tags/}" build/release/dist
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          tag=${GITHUB_REF#refs/tags/}
+          (cd build/release/dist && sha256sum -c SHA256SUMS)
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::$GH_REPO already has a release for $tag: delete it first (a release is never changed in place)"; exit 1
+          fi
+          sh scripts/release/notes.sh "$VERSION" > "$RUNNER_TEMP/notes.md"
+          pre=(); case $VERSION in 0.*) pre=(--prerelease) ;; esac
+          gh release create "$tag" --draft --verify-tag "${pre[@]}" --title "espDNS $VERSION" \
+            --notes-file "$RUNNER_TEMP/notes.md" build/release/dist/*
+          echo "draft release for $tag with $(find build/release/dist -type f | wc -l) files: sign its SHA256SUMS, add SHA256SUMS.sig, publish it (docs/releasing.md)"

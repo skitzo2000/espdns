@@ -1,23 +1,29 @@
-# CI: on every push, the host tests, the controller's vet and tests (in a pinned Go image), and a
-# build of every chip image (and of the transitional images, as a deployment with nodes from
-# before board partitions builds them, here with the examples' documentation addresses).
+# CI: on every push and pull request, the host tests, the controller's vet and tests (in a
+# pinned Go image), and a build of every chip image (and of the transitional images, as a
+# deployment with nodes from before board partitions builds them, here with the examples'
+# documentation addresses).
 #
 # The firmware jobs run in the pinned ESP-IDF image itself (firmware/Makefile IDF_IMAGE; each
 # job checks it is the same version) and call the Makefile with NATIVE=1, which runs its
 # commands directly instead of in docker. Nothing here signs anything and no secret is used:
 # a build embeds only the committed public keys (firmware/keys/*.pub); releases are signed
-# when they are pushed (make ota, make fleet-rollout), never by CI.
+# by a person (docs/releasing.md), never by CI.
 #
 # Every image and action is pinned by digest (an image) or commit (an action), the tag it
 # was in a comment, so a run uses exactly what was reviewed; controller/pins_test.go
-# refuses one that is not, and firmware/README.md, Pinned versions, says how to bump them.
+# refuses one that is not.
 name: CI
 
-# Every push, to any branch. Not pull_request as well: the PRs here come from branches of
-# this repository, whose head commits the push has already built (a PR shows that run's
-# statuses), so it would only build each commit twice.
+# Every push, to any branch, and every pull request: a pull request from a fork has no push
+# here, so it is built as a pull request. A pull request from a branch of this repository is
+# built twice (the push and the pull request); the jobs are the same.
 on:
   push:
+  pull_request:
+
+# The token can only read the repository: CI writes nothing
+permissions:
+  contents: read
 
 # A newer push to a branch supersedes the run still going for it; on main every merge is
 # built to the end.
@@ -36,10 +42,6 @@ jobs:
     container:
       image: espressif/idf:v5.5.5@sha256:a9231d0697ab8f7517cc072e93b7c83e04907bfbfba80b6440d7dbbf90665cf2  # firmware/Makefile IDF_IMAGE
     steps:
-      # The ESP-IDF image has no Node, which the checkout action needs
-      - name: Node for the actions
-        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
-
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
       - name: Pinned ESP-IDF
@@ -56,8 +58,8 @@ jobs:
       # (FLEET_BOARDS). The Makefiles themselves name no board or address.
       - name: Build matrix covers every image
         run: |
-          wf=.gitea/workflows/ci.yml
-          want=$(ls firmware/images | sort | xargs)
+          wf=.github/workflows/ci.yml
+          want=$(find firmware/images -mindepth 1 -maxdepth 1 -printf "%f\n" | sort | xargs)
           have=$(sed -n 's/^ *- image: *\([^ ]*\).*/\1/p' $wf | sort | xargs)
           echo "chip images: $want; built: $have"
           [ "$want" = "$have" ] || { echo "::error::$wf: the firmware matrix must list every firmware/images/*"; exit 1; }
@@ -65,7 +67,7 @@ jobs:
                     sed -n 's/^FLEET_BOARDS *[:?+]*= *//p' controller/local.mk.example | tr ' ' '\n'; } | sed '/^$/d' | sort -u | xargs)
           have=$(sed -n 's/^ *- board: *\([^ ]*\).*/\1/p' $wf | sort | xargs)
           echo "transitional images: $want; built: $have"
-          [ -n "$want" ] && [ "$want" = "$have" ] || { echo "::error::$wf: the firmware matrix must list every STATIC_IP_<board> and FLEET_BOARDS board of the local.mk examples"; exit 1; }
+          if [ -z "$want" ] || [ "$want" != "$have" ]; then echo "::error::$wf: the firmware matrix must list every STATIC_IP_<board> and FLEET_BOARDS board of the local.mk examples"; exit 1; fi
           # No site's address, board or node in the tracked Makefiles: a deployment's are in its
           # local.mk. A literal value (not a $(...) worked out from others) for one of the
           # variables a site sets, however it is assigned, is refused.
@@ -112,10 +114,6 @@ jobs:
     container:
       image: golang:1.26.7-bookworm@sha256:e8c859f5632dcfde7b32d2012b4351728f6437930887c2f6a91ea242459e5514  # controller/go.mod go
     steps:
-      # The Go image has no Node, which the checkout action needs
-      - name: Node for the actions
-        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
-
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
       - name: Pinned Go
@@ -153,9 +151,6 @@ jobs:
           - board: p4-ip101
           - board: ws-s3-eth
     steps:
-      - name: Node for the actions
-        run: export DEBIAN_FRONTEND=noninteractive; apt-get update -qq && apt-get install -y -qq --no-install-recommends nodejs >/dev/null && node --version
-
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (v4)
 
       - name: Pinned ESP-IDF
@@ -203,7 +198,7 @@ jobs:
 
       - name: Upload the chip image
         if: matrix.image != ''
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2 (v4)
         with:
           name: image-${{ matrix.image }}
           path: firmware/dist/images/${{ matrix.image }}/
@@ -213,7 +208,7 @@ jobs:
       # tools/ota_push.py refuse it for a node that falls back on its built-in address)
       - name: Upload the transitional image
         if: matrix.board != ''
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5  # v3.2.1 (v3)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2 (v4)
         with:
           name: transitional-${{ matrix.board }}-example-address
           path: firmware/build/${{ matrix.board }}/dns2.bin

@@ -12,14 +12,17 @@ version may change anything. Write each change under Unreleased as it merges;
 ### Added
 
 - Releases: pushing a version's tag (`v<VERSION>`, checked against `VERSION` and this file)
-  builds its files in CI as a draft release: the controller's image (to the forge's
-  container registry), every chip image and each catalog board's factory image (generic: no
+  builds its files in CI as a draft release on GitHub: the controller's image (to the GitHub
+  container registry, `ghcr.io`), every chip image and each catalog board's factory image (generic: no
   address or site defaults; a factory image starts on DHCP) with its ESP Web Tools
   manifest, and `SHA256SUMS`. CI never has the release key: a person signs `SHA256SUMS`
   with one docker command, the key on standard input, and anyone checks a release, or
   imports its chip images into the controller, with `espdns release verify` and
   `espdns release import` (docs/releasing.md). The controller's image carries the
   firmware's public keys at `/keys`.
+- GitHub Actions workflows (`.github/workflows/`): CI on every push and pull request, and
+  the release, with the same pinned images, jobs and checks as before. They need no secret:
+  each job uses the run's own token, with only the permissions it needs.
 - The forward loop's metrics: `/metrics` has the upstream queries in flight per group
   (`fwd_inflight`, `fwd_zone_inflight`) and their peak, the table's size and a group's cap,
   the queries shed at the caps (`fwd_shed_total`), the upstream queries that went
